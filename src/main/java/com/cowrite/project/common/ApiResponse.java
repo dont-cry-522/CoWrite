@@ -4,25 +4,25 @@ import com.cowrite.project.common.enums.ResponseCodeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * 统一请求响应类
+ * Unified request response class
  *
  * @author heathcetide
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApiResponse<T> {
-    private int code; // 修改为 int 类型
+    private int code;
     private String message;
     private T data;
 
     public static <T> ApiResponse<T> success(T data) {
         ApiResponse<T> response = new ApiResponse<>();
-        response.setCode(ResponseCodeEnum.SUCCESS.code()); // 假设 ResponseCodeEnum.SUCCESS.code() 返回的是 int
+        response.setCode(ResponseCodeEnum.SUCCESS.code());
         response.setMessage(ResponseCodeEnum.SUCCESS.message());
         response.setData(data);
         return response;
     }
 
-    public static <T> ApiResponse<T> error(int code, String message) { // 修改参数为 int
+    public static <T> ApiResponse<T> error(int code, String message) {
         ApiResponse<T> response = new ApiResponse<>();
         response.setCode(code);
         response.setMessage(message);
