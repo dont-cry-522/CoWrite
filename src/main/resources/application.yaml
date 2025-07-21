@@ -7,7 +7,14 @@ cowrite:
     since-year: 2025
     license: MIT
 
+server:
+  port: 8080
+  servlet:
+    context-path:
+
 spring:
+  profiles:
+    active:
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
@@ -24,6 +31,53 @@ spring:
       enabled: true
       path: /h2-console  # 访问路径
 
-  # 其他通用配置，如服务器端口等
-  server:
-    port: 8080
+  #邮箱
+  mail:
+    host: smtp.zoho.com
+    port: 465
+    username: heath-cetide@zohomail.com
+    password: CTct288513832##
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.zoho.com
+    default-encoding: UTF-8
+    test-connection: true  # 启动时测试连接
+
+  # redis
+  redis:
+    database: 1
+    host: localhost
+    port: 6379
+    timeout: 5000
+    password:
+
+# ORM 配置
+mybatis-plus:
+  type-handlers-package: com.cowrite.project.common.typehandler
+  mapper-locations: classpath*:/mapper/**/*.xml               # Mapper XML 文件路径
+  configuration:
+    map-underscore-to-camel-case: true                        # 开启驼峰命名自动映射
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl     # 控制台打印 SQL
+  global-config:
+    banner: false                                             # 关闭启动时的 banner
+    enable-sql-runner: false                                  # 是否启用 SqlRunner
+    db-config:
+      table-prefix: hib_                                      # 表前缀映射
+      id-type: auto                                           # 主键策略
+      logic-delete-value: 1                                   # 逻辑删除值
+      logic-not-delete-value: 0                               # 正常值
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
