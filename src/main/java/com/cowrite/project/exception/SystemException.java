@@ -1,19 +1,19 @@
 package com.cowrite.project.exception;
 
 /**
- * 封装服务器内部错误，如数据库异常、第三方服务调用失败
+ * Encapsulate internal errors of the server, such as abnormal database and failure of third-party service call.
  *
  * @author heathcetide
  */
 public class SystemException extends RuntimeException {
 
     /**
-     * 错误码，配合 ErrorCodeEnum 使用。
+     * Error code, used in conjunction with ErrorCodeEnum.
      */
     private final Integer errorCode;
 
     /**
-     * 错误信息
+     * Error message
      */
     private final String errorDetail;
 

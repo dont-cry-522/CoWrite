@@ -1,19 +1,19 @@
 package com.cowrite.project.exception;
 
 /**
- * 自定义参数校验异常，用于封装校验失败的字段和错误信息。
+ * User-defined parameter verification exception is used to encapsulate the fields and error messages that failed verification.
  *
  * @author heathcetide
  */
 public class ValidationException extends RuntimeException {
 
     /**
-     * 错误码，配合 ErrorCodeEnum 使用。
+     * Error code, used in conjunction with ErrorCodeEnum.
      */
     private final String errorCode;
 
     /**
-     * 校验失败的字段名称。
+     * Name of the field that failed validation.
      */
     private final String field;
 

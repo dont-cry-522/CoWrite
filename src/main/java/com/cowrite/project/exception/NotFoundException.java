@@ -1,7 +1,7 @@
 package com.cowrite.project.exception;
 
 /**
- * 资源没有找到异常
+ * The resource found no exception.
  *
  * @author heathcetide
  */
@@ -9,12 +9,12 @@ public class NotFoundException extends RuntimeException {
 
 
     /**
-     * 错误码，配合 ErrorCodeEnum 使用。
+     * Error code, used in conjunction with ErrorCodeEnum.
      */
     private final Integer errorCode;
 
     /**
-     * 错误信息
+     * Error message
      */
     private final String errorDetail;
 

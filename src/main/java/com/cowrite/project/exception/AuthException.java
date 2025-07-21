@@ -1,19 +1,19 @@
 package com.cowrite.project.exception;
 
 /**
- * 认证授权异常
+ * Exception in authentication authorization.
  *
  * @author heathcetide
  */
 public class AuthException extends RuntimeException {
 
     /**
-     * 错误码，配合 ErrorCodeEnum 使用。
+     * Error code, used in conjunction with ErrorCodeEnum.
      */
     private final Integer errorCode;
 
     /**
-     * 错误信息
+     * Error message
      */
     private final String errorDetail;
 

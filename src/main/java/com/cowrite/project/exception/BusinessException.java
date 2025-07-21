@@ -1,19 +1,19 @@
 package com.cowrite.project.exception;
 
 /**
- * 用户请求合法但由于业务规则无法执行，例如库存不足、余额不足
+ * User's request is legal but cannot be executed due to business rules, such as insufficient inventory and balance.
  *
  * @author heathcetide
  */
 public class BusinessException extends RuntimeException {
 
     /**
-     * 错误码，配合 ErrorCodeEnum 使用。
+     * Error code, used in conjunction with ErrorCodeEnum.
      */
     private final Integer errorCode;
 
     /**
-     * 错误信息
+     * Error message
      */
     private final String errorDetail;
 

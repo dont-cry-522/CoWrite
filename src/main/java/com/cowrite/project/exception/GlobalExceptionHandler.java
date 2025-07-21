@@ -12,7 +12,7 @@ import static com.cowrite.project.common.enums.ResponseCodeEnum.UNAUTHORIZED;
 
 
 /**
- * 全局异常处理器，统一拦截并处理项目中抛出的异常，返回结构化响应。
+ * Global exception handler, which intercepts and handles the exceptions thrown in the project in a unified way and returns a structured response.
  *
  * @author heathcetide
  */
@@ -20,7 +20,7 @@ import static com.cowrite.project.common.enums.ResponseCodeEnum.UNAUTHORIZED;
 public class GlobalExceptionHandler {
 
     /**
-     * 处理业务异常（如余额不足、状态冲突等）
+     * Handle business anomalies (such as insufficient balance, state conflict, etc.)
      */
     @ExceptionHandler(BusinessException.class)
     public ApiResponse<?> handleBusinessException(BusinessException ex) {
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理系统级异常（如数据库连接失败、第三方服务不可用等）
+     * Handle system-level exceptions (such as database connection failure, unavailability of third-party services, etc.)
      */
     @ExceptionHandler(SystemException.class)
     public ApiResponse<?> handleSystemException(SystemException ex) {
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理认证或授权失败异常（如未登录、没有权限访问等）
+     * Exception in handling authentication or authorization failure (e.g. no login, no access rights, etc.)
      */
     @ExceptionHandler(AuthException.class)
     public ApiResponse<?> handleAuthException(AuthException ex) {
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理资源未找到异常（如访问了不存在的用户、商品等）
+     * No exception was found when processing resources (such as visiting nonexistent users, commodities, etc.)
      */
     @ExceptionHandler(NotFoundException.class)
     public ApiResponse<?> handleNotFoundException(NotFoundException ex) {
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理资源未找到异常（如访问了不存在的用户、商品等）
+     * No exception was found when processing resources (such as visiting nonexistent users, commodities, etc.)
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理权限认证异常
+     * Exception in processing permission authentication.
      */
     @ExceptionHandler(AuthorizationException.class)
     public ApiResponse<?> handleAuthorizationException(AuthorizationException e) {
@@ -74,7 +74,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理运行异常
+     * Handling abnormal operation
      */
     @ExceptionHandler(RuntimeException.class)
     public ApiResponse<?> handleRuntimeException(RuntimeException e) {
@@ -82,7 +82,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 捕获所有未明确处理的其他异常，避免 500 错误直接暴露
+     * Catch all other exceptions that are not explicitly handled to avoid direct exposure of 500 errors.
      */
     @ExceptionHandler(Exception.class)
     public ApiResponse<?> handleOther(Exception ex) {
