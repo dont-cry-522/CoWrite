@@ -6,6 +6,14 @@ cowrite:
     owner: CoWrite Team
     since-year: 2025
     license: MIT
+  #对象存储
+  storage:
+    type: minio  # 支持 local、minio、cos
+    minio-endpoint:
+    minio-access-key:
+    minio-secret-key:
+    minio-bucket:
+    local-base-path: /tmp/uploads
 
 server:
   port: 8080
