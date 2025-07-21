@@ -6,9 +6,15 @@ cowrite:
     owner: CoWrite Team
     since-year: 2025
     license: MIT
+  # 自定义JWT配置
+  jwt:
+    secret: 6Vvq8$fG3jKlP2mNpQs5tRwUyXzA7B+C9D-E)  # 示例密钥，实际应使用生成的随机字符串
+    expiration: 86400000
+    header: Authorization
+    token-start: Bearer
   #对象存储
   storage:
-    type: minio  # 支持 local、minio、cos
+    type: local  # 支持 local、minio、cos
     minio-endpoint:
     minio-access-key:
     minio-secret-key:

@@ -24,16 +24,16 @@ public class JwtUtils {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    @Value("${hibiscus.jwt.secret}")
+    @Value("${cowrite.jwt.secret}")
     private String secret;
     
-    @Value("${hibiscus.jwt.expiration}")
+    @Value("${cowrite.jwt.expiration}")
     private Long expiration;
 
-    @Value("${hibiscus.jwt.header}")
+    @Value("${cowrite.jwt.header}")
     private String tokenHeader;
 
-    @Value("${hibiscus.jwt.token-start}")
+    @Value("${cowrite.jwt.token-start}")
     private String tokenPrefix;
 
     public JwtUtils(RedisTemplate<String, String> redisTemplate) {
