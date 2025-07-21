@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb_test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+    platform: h2
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop  # 测试环境通常选择 create-drop，会在测试结束后删除表
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console  # 控制台路径
+
+  # 配置额外的测试环境配置
+  server:
+    port: 8081  # 可以在测试时使用不同的端口
