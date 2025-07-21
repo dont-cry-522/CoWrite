@@ -1,8 +1,6 @@
-CREATE
-    DATABASE docnest_db;
+CREATE DATABASE docnest_db;
 
-use
-    docnest_db;
+use docnest_db;
 
 # User
 CREATE TABLE `hib_user`
