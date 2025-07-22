@@ -30,8 +30,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import RightSidebar from './RightSidebar.vue';
-import LeftSidebar from "./LeftSidebar.vue";
+import RightSidebar from '../components/RightSidebar.vue';
+import LeftSidebar from "../components/LeftSidebar.vue";
 const isRightCollapsed = ref(false)
 const selectedRepo = ref({ id: 1, name: '知识库 1' })
 const docCatalog = ref([
