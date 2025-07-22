@@ -25,3 +25,7 @@ CoWrite is a real-time document collaboration platform for technical teams, cont
 
 
 health endpoint: http://localhost:8080/actuator/health
+
+### Architecture diagram
+
+![Architecture diagram](.doc/img.png)
