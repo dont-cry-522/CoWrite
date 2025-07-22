@@ -18,10 +18,10 @@ cowrite:
   # STORE
   storage:
     type: minio  # 支持 local、minio、cos
-    minio-endpoint: http://47.108.177.82:9000
-    minio-access-key: W5dV2m1MutQgUS21AlE7
-    minio-secret-key: p1qDvEeJN3DlXWmnlQS0k5TWBLcvWBzOujvr1XwZ
-    minio-bucket: moxie
+    minio-endpoint:
+    minio-access-key:
+    minio-secret-key:
+    minio-bucket:
     local-base-path: /tmp/uploads
 
 server:

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cowrite.project.mapper.WebhookMapper">
+
+    <resultMap id="BaseResultMap" type="com.cowrite.project.model.entity.Webhook">
+        <id column="id" property="id" />
+        <result column="organization_id" property="organizationId" />
+        <result column="event_type" property="eventType" />
+        <result column="target_url" property="targetUrl" />
+        <result column="enabled" property="enabled" />
+        <result column="secret" property="secret" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            `id`,
+            `organization_id`,
+            `event_type`,
+            `target_url`,
+            `enabled`,
+            `secret`,
+            `created_at`,
+            `updated_at`,
+            `deleted`
+    </sql>
+
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cowrite.project.mapper.OrganizationMapper">
+
+    <resultMap id="BaseResultMap" type="com.cowrite.project.model.entity.Organization">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="description" property="description" />
+        <result column="owner_id" property="ownerId" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
+        <result column="status" property="status"/>
+        <result column="published" property="published"/>
+        <result column="max_members" property="maxMembers"/>
+        <result column="current_members" property="currentMembers"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            `id`,
+            `name`,
+            `description`,
+            `owner_id`,
+            `status`,
+            `published`,
+            `max_members`,
+            `current_members`
+            `created_at`,
+            `updated_at`,
+            `deleted`
+    </sql>
+
+</mapper>

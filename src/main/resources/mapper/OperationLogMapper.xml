@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cowrite.project.mapper.OperationLogMapper">
+
+    <!-- 通用查询结果映射 -->
+    <resultMap id="OperationLogResultMap" type="com.cowrite.project.model.entity.OperationLog">
+        <id property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="description" column="description"/>
+        <result property="operator" column="operator"/>
+        <result property="success" column="success"/>
+        <result property="params" column="params"/>
+        <result property="result" column="result"/>
+        <result property="timestamp" column="timestamp"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="OperationLogResultMap" parameterType="java.lang.Long">
+        SELECT * FROM hib_operation_log WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.cowrite.project.model.entity.OperationLog">
+        INSERT INTO hib_operation_log (
+            type, description, operator, success, params, result, timestamp
+        ) VALUES (
+                     #{type}, #{description}, #{operator}, #{success}, #{params}, #{result}, #{timestamp}
+                 )
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM hib_operation_log WHERE id = #{id}
+    </delete>
+
+</mapper>

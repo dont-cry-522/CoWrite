@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cowrite.project.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.cowrite.project.model.entity.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="email" property="email" />
+        <result column="password" property="password" />
+        <result column="avatar_url" property="avatarUrl" />
+        <result column="status" property="status" />
+        <result column="theme_dark" property="themeDark" />
+        <result column="email_notifications" property="emailNotifications" />
+        <result column="language" property="language" />
+        <result column="bio" property="bio" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            `id`,
+            `username`,
+            `email`,
+            `password`,
+            `avatar_url`,
+            `status`,
+            `theme_dark`,
+            `email_notifications`,
+            `language`,
+            `bio`,
+            `created_at`,
+            `updated_at`,
+            `deleted`
+    </sql>
+
+    <select id="existsByUsername" resultType="java.lang.Boolean">
+        SELECT COUNT(1) FROM hib_user
+        WHERE username = #{username} AND deleted = 0
+    </select>
+
+    <select id="existsByEmail" resultType="java.lang.Boolean">
+        SELECT COUNT(1) FROM hib_user
+        WHERE email = #{email} AND deleted = 0
+    </select>
+
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM hib_user
+        WHERE email = #{email} AND deleted = 0
+    </select>
+
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM hib_user
+        WHERE username = #{username} AND deleted = 0
+    </select>
+</mapper>

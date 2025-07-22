@@ -33,8 +33,8 @@ public class OrganizationInvite extends BaseEntity implements Serializable {
     /**
      * 邀请者的用户ID
      */
-    @TableField("invite_id")
-    private Long inviteId;
+    @TableField("inviter_id")
+    private Long inviterId;
 
     /**
      * 邀请码，用户凭此加入组织
@@ -82,12 +82,13 @@ public class OrganizationInvite extends BaseEntity implements Serializable {
         this.organizationId = organizationId;
     }
 
-    public Long getInviteId() {
-        return inviteId;
+
+    public Long getInviterId() {
+        return inviterId;
     }
 
-    public void setInviteId(Long inviteId) {
-        this.inviteId = inviteId;
+    public void setInviterId(Long inviterId) {
+        this.inviterId = inviterId;
     }
 
     public String getInviteCode() {
@@ -135,7 +136,7 @@ public class OrganizationInvite extends BaseEntity implements Serializable {
         return "OrganizationInvite{" +
                 "id=" + id +
                 ", organizationId=" + organizationId +
-                ", inviteId=" + inviteId +
+                ", inviterId=" + inviterId +
                 ", inviteCode='" + inviteCode + '\'' +
                 ", role='" + role + '\'' +
                 ", maxUses=" + maxUses +
