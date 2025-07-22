@@ -28,7 +28,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.cetide.codeforge.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.cowrite.project.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
