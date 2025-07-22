@@ -65,6 +65,25 @@ button:focus-visible {
   text-align: center;
 }
 
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #646cff;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #535bf2;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
