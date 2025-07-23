@@ -21,7 +21,7 @@ const routes = [
     component: Login,
   },
   {
-    path: '/back',
+    path: '/',
     component: Layout,
     children: [
       {
@@ -37,7 +37,7 @@ const routes = [
     ],
   },
   {
-    path: '/',
+    path: '/back',
     component: BackLayout,
     children: [
       { path: '', component: HomeView },
