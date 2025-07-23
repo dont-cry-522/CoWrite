@@ -7,16 +7,17 @@
     </div>
 
     <!-- User card with hover effect -->
-    <div class="user-org-wrapper" v-if="!collapsed">
-      <div
-          class="user-org-card"
-          @mouseenter="showUserPanel = true"
-          @mouseleave="handleMouseLeave"
-      >
+    <div
+        class="user-panel-wrapper"
+        @mouseenter="showUserPanel = true"
+        @mouseleave="showUserPanel = false"
+    >
+      <!-- 用户卡片 -->
+      <div class="user-org-card">
         <div class="user-org">
-          <img class="avatar" :src="user.avatar" alt="avatar" />
+          <img class="avatar" :src="userInfo?.avatarUrl" alt="avatar" />
           <div class="user-meta">
-            <div class="nickname">👤 {{ user.name }}</div>
+            <div class="nickname">👤 {{ userInfo?.username }}</div>
             <select class="org-selector" v-model="currentOrg">
               <option disabled value="">选择组织</option>
               <option value="">个人空间</option>
@@ -28,25 +29,19 @@
         </div>
       </div>
 
-      <!-- User panel popup -->
+      <!-- 悬浮面板 -->
       <transition name="fade">
-        <div
-            class="user-panel"
-            v-show="showUserPanel"
-            @mouseenter="showUserPanel = true"
-            @mouseleave="showUserPanel = false"
-        >
+        <div class="user-panel" v-show="showUserPanel">
           <div class="panel-header">
-            <h3>{{ user.name }}</h3>
+            <h3>{{ userInfo?.username }}</h3>
             <p class="user-type">普通用户，购买可享更多权益</p>
             <button class="upgrade-btn">购买</button>
           </div>
           <div class="panel-divider"></div>
           <ul class="panel-menu">
-            <li class="panel-item">创作中心</li>
-            <li class="panel-item">设置</li>
-            <li class="panel-item">退出登录</li>
-            <li class="panel-item">En</li>
+            <li class="panel-item" @click="goToCreationCenter">创作中心</li>
+            <li class="panel-item" @click="goToSettings">设置</li>
+            <li class="panel-item" @click="logout">退出登录</li>
           </ul>
         </div>
       </transition>
@@ -114,23 +109,17 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-
+import { useRouter } from 'vue-router';
 const collapsed = ref(false);
 const currentOrg = ref<string>('');
 const orgOptions = ref(['我的组织', '团队 Alpha', '写作小组']);
 const showUserPanel = ref(false);
-
-const handleMouseLeave = () => {
-  setTimeout(() => {
-    showUserPanel.value = false;
-  }, 200);
-};
-
-const user = ref({
-  name: 'Saul Goodman',
-  avatar: 'https://i.pravatar.cc/80?img=11',
-});
-
+import api from '../api/index'
+import { useAuth } from '../composables/useAuth'
+const { getUserInfo, clearAuth } = useAuth();
+const userInfo = getUserInfo
+// Vue Router
+const router = useRouter();
 const menuItems = ref([
   { id: 'ai', label: 'AI 写作', icon: 'icon-robot', emoji: '🤖' },
   { id: 'star', label: '收藏', icon: 'icon-star', emoji: '⭐' },
@@ -152,6 +141,31 @@ function handleMenuClick(item: any) {
   console.log('功能点击：', item);
   selectedMenuItem.value = item.id; // 点击时切换选中项
 }
+
+// 跳转到创作中心
+const goToCreationCenter = () => {
+  router.push('/back/stats');  // 根据你的路由配置进行跳转
+};
+
+// 跳转到设置页
+const goToSettings = () => {
+  router.push('/back/settings');  // 根据你的路由配置进行跳转
+};
+
+// 退出登录
+const logout = async () => {
+  try {
+    // 发送登出请求（根据你的 API 调整）
+    // await api.userApi.logout(); // 如果有需要注销的请求
+    // 清除本地存储的 Token 和用户信息
+    clearAuth();
+    // 跳转到登录页
+    router.push('/login');
+  } catch (error) {
+    console.error('退出登录失败:', error);
+    alert('退出登录失败，请稍后再试');
+  }
+};
 
 const repositories = ref([
   { id: 1, name: '语雀项目文档' },
@@ -545,14 +559,8 @@ function selectRepository(repo: any) {
   gap: 6px;
 }
 
-/* Animations */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.user-panel-wrapper {
+  position: relative;
+  display: inline-block;
 }
 </style>

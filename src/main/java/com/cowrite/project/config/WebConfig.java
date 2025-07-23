@@ -1,7 +1,9 @@
 package com.cowrite.project.config;
 
+import com.cowrite.project.interceptor.UserInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -14,6 +16,19 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
+
+    private final UserInterceptor userInterceptor;
+
+    public WebConfig(UserInterceptor userInterceptor) {
+        this.userInterceptor = userInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userInterceptor)
+                .addPathPatterns("/api/users/upload-avatar","/api/users/update");
+    }
+
     @Bean
     public Docket docket() {
         ApiInfo apiInfo = new ApiInfoBuilder()

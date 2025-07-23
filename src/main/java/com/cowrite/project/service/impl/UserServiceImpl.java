@@ -121,7 +121,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             SignalContextCollector.collect(EVENT_INTER_MEDIATE_USER, user);
             SignalContextCollector.collect(EVENT_INTER_MEDIATE_REQUEST, request);
             redisUtils.set(USER_CACHE_KEY + user.getEmail(), user.getEmail(), USER_CACHE_TIME);
-            return UserVO.convertToUserVO(user);
+            String token = jwtUtils.generateToken(user);
+            // 缓存token和用户信息
+            redisUtils.set(TOKEN_CACHE_KEY + user.getId(), token, TOKEN_CACHE_TIME);
+            redisUtils.set(USER_CACHE_KEY + user.getEmail(), user.getEmail(), USER_CACHE_TIME);
+            UserVO userVO = UserVO.convertToUserVO(user);
+            userVO.setToken(token);
+            return userVO;
         } catch (Exception e) {
             throw new BusinessException(SYSTEM_ERROR.code(), "操作失败, 请联系站长" + e.getMessage());
         }
@@ -137,7 +143,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     @Transactional
-    public String loginByEmail(UserEmailRequest userEmailRequest, HttpServletRequest request) {
+    public UserVO loginByEmail(UserEmailRequest userEmailRequest, HttpServletRequest request) {
         String email = userEmailRequest.getEmail();
         if (!CommonCheckUtils.isValidEmail(email)) {
             throw new BusinessException(SYSTEM_ERROR.code(), "邮箱格式不正确");
@@ -159,7 +165,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 缓存token和用户信息
         redisUtils.set(TOKEN_CACHE_KEY + user.getId(), token, TOKEN_CACHE_TIME);
         redisUtils.set(USER_CACHE_KEY + user.getEmail(), user.getEmail(), USER_CACHE_TIME);
-        return token;
+        UserVO userVO = UserVO.convertToUserVO(user);
+        userVO.setToken(token);
+        return userVO;
     }
 
     /**

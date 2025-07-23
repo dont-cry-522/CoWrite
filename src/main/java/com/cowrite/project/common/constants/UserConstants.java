@@ -67,8 +67,7 @@ public interface UserConstants {
 
     String EMPTY_PASSWORD_HASH = "moxie";
 
-    String NEW_USER_NICKNAME = "Cow-" + UUID.randomUUID().toString().replace("-", "")
-            .substring(UUID.randomUUID().toString().replace("-", "").length() - 10);
+    String NEW_USER_NICKNAME = "Cow-" + UUID.randomUUID().toString().replace("-", "").substring(22);
 
     String DEFAULT_USER = "https://cetide-1325039295.cos.ap-chengdu.myqcloud.com/west/default_user.png";
 

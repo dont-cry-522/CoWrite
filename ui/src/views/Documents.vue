@@ -83,87 +83,102 @@
         <span>🎙️ 试试新建~ </span>
       </button>
       <div class="user-info-combined">
-        <img class="user-avatar" src="https://i.pravatar.cc/40?img=5" />
-        <span>Saul Goodman / 默认知识库</span>
-        <span class="date-info">2023-10-25</span>
+        <img class="user-avatar" :src="userInfo?.avatarUrl" />
+        <span>{{ userInfo?.username }} / 默认知识库</span>
+        <span class="date-info">{{ new Date().toISOString().split('T')[0] }}</span>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
-export default defineComponent({
-  name: 'Documents',
-  setup() {
-    const activeCategory = ref('edited');
-    const activeFilter = ref('type');
-    const activeDropdown = ref<string | null>(null);
-    const docCategories = [
-      { id: 'edited', label: '编辑过' },
-      { id: 'viewed', label: '浏览过' },
-      { id: 'liked', label: '我点赞的' },
-      { id: 'commented', label: '我评论过' }
-    ];
-    const docFilters = [
-      { id: 'type', label: '类型' },
-      { id: 'owner', label: '归属' },
-      { id: 'creator', label: '创建者' }
-    ];
-    const filterOptions = {
-      type: [
-        { value: 'all', label: '✓ 所有' },
-        { value: 'doc', label: '文档' },
-        { value: 'sheet', label: '表格' },
-        { value: 'board', label: '画板' },
-        { value: 'table', label: '数据表' }
-      ],
-      owner: [
-        { value: 'me', label: '我的' },
-        { value: 'team', label: '团队的' },
-        { value: 'shared', label: '共享的' }
-      ],
-      creator: [
-        { value: 'me', label: '我创建的' },
-        { value: 'others', label: '他人创建的' }
-      ]
-    };
-    const toggleDropdown = (filterId: string) => {
-      activeDropdown.value = activeDropdown.value === filterId ? null : filterId;
-    };
-    const selectFilterItem = (filterId: string, value: string) => {
-      activeFilter.value = filterId;
-      console.log(`Selected ${filterId}: ${value}`);
-      activeDropdown.value = null;
-    };
-    return {
-      docCategories,
-      docFilters,
-      filterOptions,
-      activeCategory,
-      activeFilter,
-      activeDropdown,
-      toggleDropdown,
-      selectFilterItem
-    };
-  },
-  methods: {
-    createDocument() { console.log('创建文档'); },
-    createRepo() { console.log('创建知识库'); },
-    openTemplates() { console.log('打开模板中心'); },
-    useAI() { console.log('使用AI生成文档'); },
-    filterByCategory(category: string) {
-      this.activeCategory = category;
-      console.log('按分类筛选:', category);
-    },
-    applyFilter(filter: string) {
-      this.activeFilter = filter;
-      console.log('应用筛选:', filter);
-    },
-    openFeature() { console.log('打开特色功能'); }
-  }
-});
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useAuth } from '../composables/useAuth'
+
+// -----------------------
+// 认证状态（用户信息）
+// -----------------------
+const { getUserInfo } = useAuth()
+const userInfo = getUserInfo
+
+// -----------------------
+// 文档分类和筛选
+// -----------------------
+const activeCategory = ref('edited')
+const activeFilter = ref('type')
+const activeDropdown = ref<string | null>(null)
+
+const docCategories = [
+  { id: 'edited', label: '编辑过' },
+  { id: 'viewed', label: '浏览过' },
+  { id: 'liked', label: '我点赞的' },
+  { id: 'commented', label: '我评论过' }
+]
+
+const docFilters = [
+  { id: 'type', label: '类型' },
+  { id: 'owner', label: '归属' },
+  { id: 'creator', label: '创建者' }
+]
+
+const filterOptions = {
+  type: [
+    { value: 'all', label: '✓ 所有' },
+    { value: 'doc', label: '文档' },
+    { value: 'sheet', label: '表格' },
+    { value: 'board', label: '画板' },
+    { value: 'table', label: '数据表' }
+  ],
+  owner: [
+    { value: 'me', label: '我的' },
+    { value: 'team', label: '团队的' },
+    { value: 'shared', label: '共享的' }
+  ],
+  creator: [
+    { value: 'me', label: '我创建的' },
+    { value: 'others', label: '他人创建的' }
+  ]
+}
+
+// -----------------------
+// 交互方法
+// -----------------------
+const toggleDropdown = (filterId: string) => {
+  activeDropdown.value = activeDropdown.value === filterId ? null : filterId
+}
+
+const selectFilterItem = (filterId: string, value: string) => {
+  activeFilter.value = filterId
+  console.log(`Selected ${filterId}: ${value}`)
+  activeDropdown.value = null
+}
+
+const createDocument = () => {
+  console.log('创建文档')
+}
+
+const createRepo = () => {
+  console.log('创建知识库')
+}
+
+const openTemplates = () => {
+  console.log('打开模板中心')
+}
+
+const useAI = () => {
+  console.log('使用AI生成文档')
+}
+
+const filterByCategory = (category: string) => {
+  activeCategory.value = category
+  console.log('按分类筛选:', category)
+}
+
+const openFeature = () => {
+  console.log('打开特色功能')
+}
 </script>
+
 
 <style scoped>
 .yuque-documents {

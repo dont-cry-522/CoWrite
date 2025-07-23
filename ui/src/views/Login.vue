@@ -97,10 +97,12 @@ import {
   LoaderIcon,
 } from 'lucide-vue-next'
 
+import api from '../api/index.js';
 const router = useRouter()
-
+import { useAuth } from '../composables/useAuth'
+const { setToken, setUserInfo } = useAuth()
 const mode = ref<'email' | 'account'>('email')
-const email = ref('')
+const email = ref('2148582258@qq.com')
 const code = ref('')
 const username = ref('')
 const password = ref('')
@@ -112,15 +114,12 @@ const switchMode = (m: 'email' | 'account') => {
   mode.value = m
 }
 
+// 发送验证码
 const sendCode = async () => {
   if (!email.value) return
   try {
     loading.value = true
-    await fetch('/api/send-code', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email.value }),
-    })
+    await api.userApi.sendVerificationCode(email.value)  // 调用发送验证码的接口
 
     codeCooldown.value = 60
     timer = setInterval(() => {
@@ -165,6 +164,7 @@ const handleLogin = async () => {
       return
     }
   }
+
   loading.value = true
   try {
     const payload =
@@ -172,16 +172,61 @@ const handleLogin = async () => {
             ? { email: email.value, code: code.value }
             : { username: username.value, password: password.value }
 
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
+    const data =
+        mode.value === 'email'
+            ? await api.userApi.login(payload)
+            : await api.userApi.register(payload)
 
-    const data = await res.json()
-    if (!res.ok) throw new Error(data.message || '登录失败')
-    localStorage.setItem('token', data.token)
-    router.push('/')
+    // 登录失败时，尝试自动注册
+    if (data.code === 500 && data.message === '邮箱未注册') {
+      const shouldRegister = confirm('检测到您还未注册账号，现在自动为您注册')
+      if (shouldRegister) {
+        try {
+          console.log(code.value)
+          console.log(email.value)
+
+          // 自动注册
+          const registerData = await api.userApi.register({
+            email: email.value,
+            code: code.value
+          })
+
+          if (registerData.data?.token) {
+            // 注册成功后，保存 token 和用户信息
+            setToken(registerData.data.token)
+            setUserInfo({
+              username: registerData.data.username,
+              email: registerData.data.email,
+              avatarUrl: registerData.data.avatarUrl,
+              bio: registerData.data.bio,
+              language: registerData.data.language,
+              themeDark: registerData.data.themeDark,
+              status: registerData.data.status
+            })
+            router.push('/')
+          } else {
+            alert('注册失败')
+          }
+        } catch (regErr: any) {
+          alert(regErr.message || '注册失败')
+        }
+      }
+    } else if (data.data?.token) {
+      // 登录成功，保存 token 和用户信息
+      setToken(data.data.token)
+      setUserInfo({
+        username: data.data.username,
+        email: data.data.email,
+        avatarUrl: data.data.avatarUrl,
+        bio: data.data.bio,
+        language: data.data.language,
+        themeDark: data.data.themeDark,
+        status: data.data.status
+      })
+      router.push('/')
+    } else {
+      alert('登录失败')
+    }
   } catch (err: any) {
     alert(err.message)
   } finally {
@@ -189,11 +234,13 @@ const handleLogin = async () => {
   }
 }
 
+// GitHub 登录
 const loginWithGitHub = () => {
   window.location.href =
       'https://github.com/login/oauth/authorize?client_id=YOUR_CLIENT_ID'
 }
 
+// 忘记密码处理
 const onForgotPassword = () => {
   alert('请联系管理员重置密码或前往找回页面')
 }

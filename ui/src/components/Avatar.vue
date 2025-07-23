@@ -101,12 +101,13 @@ const handleClick = () => {
 }
 
 const handleUpload = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  const file = target.files?.[0]
+  const target = e.target as HTMLInputElement;
+  const file = target.files?.[0];
+  console.log(file); // 打印文件，确保正确传递
   if (file) {
-    emit('upload', file)
+    emit('upload', file);
   }
-}
+};
 </script>
 
 <style scoped>

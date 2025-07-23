@@ -35,7 +35,7 @@ public interface UserService extends IService<User> {
      * 用户登录
      */
     @Loggable(type = LogType.USER_LOGIN, value = "用户登录")
-    String loginByEmail(UserEmailRequest userEmailRequest, HttpServletRequest request);
+    UserVO loginByEmail(UserEmailRequest userEmailRequest, HttpServletRequest request);
 
     /**
      * 修改用户信息

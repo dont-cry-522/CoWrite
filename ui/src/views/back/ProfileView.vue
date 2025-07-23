@@ -1,17 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive,ref } from 'vue'
 import Avatar from '../../components/Avatar.vue'
 import Textarea from '../../components/Textarea.vue'
+import api from '../../api/index'
+import { useAuth } from '../../composables/useAuth'
+const { getUserInfo, setUserInfo } = useAuth()
+const userInfo = getUserInfo
 
-// 假设我们从后端获取到的用户数据
-const user = ref({
-  username: '张三',
-  email: 'zhangsan@example.com',
-  avatar_url: 'https://via.placeholder.com/150',
-  bio: '这是我的个人简介',
-  theme_dark: 0, // 主题：0 浅色，1 深色
-  email_notifications: 1, // 邮件通知：0 关闭，1 开启
-  language: 'ZH', // 语言：EN / ZH
+// 使用 reactive 来管理 user 数据
+const user = reactive({
+  username: userInfo.value?.username || '',
+  email: userInfo.value?.email || '',
+  avatar_url: userInfo.value?.avatarUrl || 'https://via.placeholder.com/150',
+  bio: userInfo.value?.bio || '这是我的个人简介',
+  theme_dark: userInfo.value?.themeDark ? 1 : 0, // 转换为 1（深色） 或 0（浅色）
+  email_notifications: 1, // 默认开启邮件通知
+  language: userInfo.value?.language || 'zh-CN',
 })
 
 // 编辑状态
@@ -23,19 +27,37 @@ function toggleEdit() {
 }
 
 // 更新用户信息（假设为保存的操作）
-function saveChanges() {
-  // 这里模拟保存操作，实际应用中可以调用 API 保存修改的数据
-  console.log('保存修改', user.value)
-  editing.value = false
-}
+const saveChanges = async () => {
+  try {
+    // 调用 updateUserInfo 接口，传递 user 数据
+    const response = await api.userApi.updateUserInfo(user);
+    console.log('用户信息更新成功', response);
+
+    const updatedUserInfo = { ...userInfo.value, username: user.username, bio: user.bio, language: user.language, themeDark: user.theme_dark }; // 更新 avatarUrl
+    setUserInfo(updatedUserInfo);  // 更新 useAuth 中的 userInfo
+
+    // 关闭编辑模式
+    editing.value = false;
+  } catch (error) {
+    console.error('用户信息更新失败', error);
+  }
+};
 
 // 头像上传处理
-function handleAvatarUpload(file: File) {
-  // 处理头像上传
-  console.log('上传头像', file)
-  // 更新头像URL
-  user.value.avatar_url = URL.createObjectURL(file)
-}
+const handleAvatarUpload = async (file: File) => {
+  console.log(file); // 打印文件信息，检查文件是否正确传递
+  try {
+    const response = await api.userApi.uploadAvatar(file);
+    console.log('头像上传成功', response);
+    user.avatar_url = response.data;  // 假设返回的新头像 URL
+    // 同步更新 useAuth 中的 userInfo
+    const updatedUserInfo = { ...userInfo.value, avatarUrl: user.avatar_url }; // 更新 avatarUrl
+    setUserInfo(updatedUserInfo);  // 更新 useAuth 中的 userInfo
+
+  } catch (error) {
+    console.error('头像上传失败', error);
+  }
+};
 </script>
 
 <template>
@@ -76,7 +98,7 @@ function handleAvatarUpload(file: File) {
       <!-- 邮箱 -->
       <div class="form-group card">
         <label for="email">邮箱</label>
-        <input v-if="editing" v-model="user.email" id="email" type="email" placeholder="请输入邮箱" />
+        <input disabled v-if="editing" v-model="user.email" id="email" type="email" placeholder="请输入邮箱" />
         <p v-else>{{ user.email }}</p>
       </div>
 

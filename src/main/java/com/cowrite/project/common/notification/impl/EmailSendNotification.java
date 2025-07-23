@@ -61,7 +61,7 @@ public class EmailSendNotification implements SendNotifyStrategy {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         message.setFrom("heath-cetide@zohomail.com");
         // 设置带有显示名称的 From 地址
-        String officialFrom = "墨协 <heath-cetide@zohomail.com>";
+        String officialFrom = "CoWrite <heath-cetide@zohomail.com>";
         helper.setFrom(new InternetAddress(officialFrom));
         helper.setTo(to);
         helper.setSubject(subject);
@@ -81,10 +81,10 @@ public class EmailSendNotification implements SendNotifyStrategy {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         message.setFrom("heath-cetide@zohomail.com");
         // 设置带有显示名称的 From 地址
-        String officialFrom = "墨协 <heath-cetide@zohomail.com>";
+        String officialFrom = "CoWrite <heath-cetide@zohomail.com>";
         helper.setFrom(new InternetAddress(officialFrom));
         helper.setTo(to);
-        helper.setSubject("欢迎加入墨协！");
+        helper.setSubject("欢迎加入CoWrite！");
         helper.setText(body, true);
         // 发送邮件
         mailSender.send(message);
@@ -102,10 +102,10 @@ public class EmailSendNotification implements SendNotifyStrategy {
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         message.setFrom("heath-cetide@zohomail.com");
         // 设置带有显示名称的 From 地址
-        String officialFrom = "墨协 <heath-cetide@zohomail.com>";
+        String officialFrom = "CoWrite <heath-cetide@zohomail.com>";
         helper.setFrom(new InternetAddress(officialFrom));
         helper.setTo(to);
-        helper.setSubject("欢迎加入墨协！");
+        helper.setSubject("欢迎加入CoWrite！");
         helper.setText(body, true);
         // 发送邮件
         mailSender.send(message);

@@ -21,6 +21,8 @@ public class UserVO{
 
     private String bio;
 
+    private String token;
+
     public UserVO() {
     }
 
@@ -107,9 +109,17 @@ public class UserVO{
         this.bio = bio;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public static UserVO convertToUserVO(User user){
         UserVO userVO = new UserVO();
+        userVO.setUsername(user.getUsername());
         userVO.setBio(user.getBio());
         userVO.setEmail(user.getEmail());
         userVO.setAvatarUrl(user.getAvatarUrl());

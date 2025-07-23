@@ -58,6 +58,9 @@ public class UserController {
     @PostMapping("/register/email")
     @ApiOperation("邮箱注册账号")
     public ApiResponse<UserVO> registerEmail(@RequestBody UserEmailRequest userEmailRequest, HttpServletRequest request) {
+        if (userEmailRequest.getCode().isEmpty() || userEmailRequest.getEmail().isEmpty()){
+            return ApiResponse.error("注册信息不全");
+        }
         return ApiResponse.success(userService.registerByEmail(userEmailRequest, request));
     }
 
@@ -81,7 +84,7 @@ public class UserController {
      */
     @PostMapping("/login/email")
     @ApiOperation("邮箱登录账号")
-    public ApiResponse<String> loginByEmail(@RequestBody UserEmailRequest userEmailRequest, HttpServletRequest request) {
+    public ApiResponse<UserVO> loginByEmail(@RequestBody UserEmailRequest userEmailRequest, HttpServletRequest request) {
         return ApiResponse.success(userService.loginByEmail(userEmailRequest, request));
     }
 
