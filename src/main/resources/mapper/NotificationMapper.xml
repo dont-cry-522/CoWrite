@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cowrite.project.mapper.NotificationMapper">
+
+    <resultMap id="NotificationResultMap" type="com.cowrite.project.model.entity.Notification">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="type" property="type" javaType="com.cowrite.project.common.enums.NotificationType" />
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="level" property="level" javaType="com.cowrite.project.common.enums.NotificationLevel"/>
+        <result column="is_level" property="read"/>
+        <result column="business_id" property="businessId"/>
+        <result column="business_type" property="businessType"/>
+        <result column="extra_data" property="extraData"/>
+        <result column="send_time" property="sendTime"/>
+        <result column="read_time" property="readTime"/>
+        <result column="deleted" property="deleted"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <sql id="BaseColumnList">
+        id, user_id, type, title, content, level, is_read,
+        business_id, business_type, extra_data,
+        send_time, read_time, deleted, created_at, updated_at
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="false">
+        INSERT INTO hib_notification (
+            id, user_id, type, title, content, level, is_read,
+            business_id, business_type, extra_data,
+            send_time, read_time, deleted, created_at, updated_at
+        ) VALUES (
+                     #{id}, #{userId}, #{type}, #{title}, #{content}, #{level}, #{read},
+                     #{businessId}, #{businessType}, #{extraData},
+                     #{sendTime}, #{readTime}, #{deleted}, #{createdAt}, #{updatedAt}
+                 )
+    </insert>
+
+    <delete id="deleteById">
+        UPDATE hib_notification SET deleted = 1 WHERE id = #{id}
+    </delete>
+
+</mapper>

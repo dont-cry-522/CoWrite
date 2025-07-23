@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cowrite.project.mapper.OrganizationInviteMapper">
+
+    <resultMap id="BaseResultMap" type="com.cowrite.project.model.entity.OrganizationInvite">
+        <id column="id" property="id" />
+        <result column="organization_id" property="organizationId" />
+        <result column="inviter_id" property="inviterId" />
+        <result column="invite_code" property="inviteCode" />
+        <result column="role" property="role" />
+        <result column="max_uses" property="maxUses" />
+        <result column="used_count" property="usedCount" />
+        <result column="expires_at" property="expiresAt" />
+        <result column="created_at" property="createdAt" />
+        <result column="updated_at" property="updatedAt" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            `id`,
+            `organization_id`,
+            `inviter_id`,
+            `invite_code`,
+            `role`,
+            `max_uses`,
+            `used_count`,
+            `expires_at`,
+            `created_at`,
+            `updated_at`,
+            `deleted`
+    </sql>
+
+</mapper>

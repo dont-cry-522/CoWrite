@@ -1,4 +1,3 @@
-# 项目基本信息
 cowrite:
   name: CoWrite-Backend
   version: @project.version@  # Maven属性注入
@@ -7,21 +6,19 @@ cowrite:
     owner: CoWrite Team
     since-year: 2025
     license: MIT
-
-  # JWT CONFIG
+  # 自定义JWT配置
   jwt:
     secret: 6Vvq8$fG3jKlP2mNpQs5tRwUyXzA7B+C9D-E)  # 示例密钥，实际应使用生成的随机字符串
     expiration: 86400000
     header: Authorization
     token-start: Bearer
-
-  # STORE
+  #对象存储
   storage:
     type: local  # 支持 local、minio、cos
-    minio-endpoint: http://47.108.177.82:9000
-    minio-access-key: W5dV2m1MutQgUS21AlE7
-    minio-secret-key: p1qDvEeJN3DlXWmnlQS0k5TWBLcvWBzOujvr1XwZ
-    minio-bucket: moxie
+    minio-endpoint:
+    minio-access-key:
+    minio-secret-key:
+    minio-bucket:
     local-base-path: /tmp/uploads
 
 server:
@@ -29,30 +26,9 @@ server:
   servlet:
     context-path:
 
-# Spring 配置
 spring:
   profiles:
-    active: mysql  # 默认使用 mysql profile，可改为 h2 测试内存数据库
-
-# MySQL 配置（spring.profiles=mysql）
----
-spring:
-  profiles: mysql
-  datasource:
-    url: jdbc:mysql://localhost:3306/?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: 2117350690a
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-
-# H2 配置（spring.profiles=h2）
----
-spring:
-  profiles: h2
+    active:
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
@@ -62,39 +38,39 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  # 这里可以使用 'update' 来自动创建表结构
     show-sql: true
   h2:
     console:
       enabled: true
-      path: /h2-console
+      path: /h2-console  # 访问路径
 
-# EMAIL
-spring.mail:
-  host: smtp.zoho.com
-  port: 465
-  username: heath-cetide@zohomail.com
-  password: CTct288513832##
-  protocol: smtp
-  properties:
-    mail:
-      smtp:
-        auth: true
-        ssl:
-          enable: true
-          trust: smtp.zoho.com
-  default-encoding: UTF-8
-  test-connection: true
+  #邮箱
+  mail:
+    host: smtp.zoho.com
+    port: 465
+    username: heath-cetide@zohomail.com
+    password: CTct288513832##
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.zoho.com
+    default-encoding: UTF-8
+    test-connection: true  # 启动时测试连接
 
-# REDIS
-redis:
-  database: 1
-  host: localhost
-  port: 6379
-  timeout: 5000
-  password:
+  # redis
+  redis:
+    database: 1
+    host: localhost
+    port: 6379
+    timeout: 5000
+    password:
 
-# ORM CONFIG
+# ORM 配置
 mybatis-plus:
   type-handlers-package: com.cowrite.project.common.typehandler
   mapper-locations: classpath*:/mapper/**/*.xml               # Mapper XML 文件路径
@@ -110,10 +86,8 @@ mybatis-plus:
       logic-delete-value: 1                                   # 逻辑删除值
       logic-not-delete-value: 0                               # 正常值
 
+
 management:
-  health:
-    redis:
-      enabled: true
   endpoints:
     web:
       exposure:
