@@ -1,7 +1,5 @@
 package com.cowrite.project.netty.protocol;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.HashMap;
 import java.util.Map;
 
