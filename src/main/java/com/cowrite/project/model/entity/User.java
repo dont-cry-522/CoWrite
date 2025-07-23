@@ -32,6 +32,7 @@ public class User extends BaseEntity implements Serializable {
     @TableField("username")
     private String username;
 
+
     /**
      * 电子邮箱（可选唯一）
      */
@@ -79,6 +80,7 @@ public class User extends BaseEntity implements Serializable {
      */
     @TableField("bio")
     private String bio;
+
 
     public User(){
 
@@ -188,7 +190,10 @@ public class User extends BaseEntity implements Serializable {
         this.bio = bio;
     }
 
-    public void update(String username, String email, String avatarUrl, String status) {
+
+
+
+    public void update(String username, String email,String  password, String avatarUrl, String status) {
         if (username != null) this.username = username;
         if (email != null) this.email = email;
         if (avatarUrl != null) this.avatarUrl = avatarUrl;
@@ -196,10 +201,19 @@ public class User extends BaseEntity implements Serializable {
         this.setUpdatedAt(LocalDateTime.now());
     }
 
+
     public void markDeleted() {
         this.setDeleted(true);
         this.status = "DELETED";
         this.setUpdatedAt(LocalDateTime.now());
+    }
+
+    public User(String username, String email, String password, String avatarUrl, String status) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.avatarUrl = avatarUrl;
+        this.status = status;
     }
 
     @Override

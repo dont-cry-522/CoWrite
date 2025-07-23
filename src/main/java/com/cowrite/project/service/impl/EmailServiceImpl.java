@@ -46,7 +46,7 @@ public class EmailServiceImpl implements EmailService {
             try {
                 // 发送邮件
                 sendNotificationService.setSendNotifyStrategy(sendNotifyStrategy);
-                sendNotificationService.sendMessage("请接收墨协的验证码" + code, email, "请接收墨协验证码");
+                sendNotificationService.sendMessage("请接收CoWrite的验证码" + code, email, "请接收CoWrite验证码");
                 return; // 邮件发送成功，退出重试逻辑
             } catch (Exception e) {
                 retryCount++;
