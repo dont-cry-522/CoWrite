@@ -8,7 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Avatar: typeof import('./src/components/Avatar.vue')['default']
+    AvatarGroup: typeof import('./src/components/AvatarGroup.vue')['default']
+    Chart: typeof import('./src/components/Chart.vue')['default']
+    CustomModal: typeof import('./src/components/CustomModal.vue')['default']
+    Header: typeof import('./src/components/Header.vue')['default']
     IconMdiChevronLeft: typeof import('~icons/mdi/chevron-left')['default']
     IconMdiChevronRight: typeof import('~icons/mdi/chevron-right')['default']
     IconMdiFileDocumentOutline: typeof import('~icons/mdi/file-document-outline')['default']
@@ -16,10 +20,18 @@ declare module 'vue' {
     IconMdiHome: typeof import('~icons/mdi/home')['default']
     Layout: typeof import('./src/layout/Layout.vue')['default']
     LeftSidebar: typeof import('./src/components/LeftSidebar.vue')['default']
+    MenuItem: typeof import('./src/components/MenuItem.vue')['default']
     NestedOutlineEditor: typeof import('./src/components/NestedOutlineEditor.vue')['default']
+    Notify: typeof import('./src/components/Notify.vue')['default']
+    NotifyContainer: typeof import('./src/components/NotifyContainer.vue')['default']
+    Pagination: typeof import('./src/components/Pagination.vue')['default']
     RightSidebar: typeof import('./src/components/RightSidebar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Select: typeof import('./src/components/Select.vue')['default']
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
+    SiderMenu: typeof import('./src/components/SiderMenu.vue')['default']
+    Textarea: typeof import('./src/components/Textarea.vue')['default']
+    WChart: typeof import('./src/components/WChart.vue')['default']
   }
 }
