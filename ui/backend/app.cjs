@@ -7,7 +7,7 @@ const cronJobs = require('./cronJobs/userStatsCronJob.cjs'); // 启动定时任�
 const app = express();
 
 // 路由配置示例
-app.get('/hello', (req, res) => {
+app.get('/info', (req, res) => {
     res.send('Hello, World!');
 });
 
@@ -16,7 +16,5 @@ app.use(bodyParser.json());
 
 // 路由
 app.use('/api/users', authenticate, userRoutes);  // 认证保护路由
-
-
 
 module.exports = app;
