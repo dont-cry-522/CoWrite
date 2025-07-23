@@ -13,6 +13,7 @@ declare module 'vue' {
     Chart: typeof import('./src/components/Chart.vue')['default']
     CustomModal: typeof import('./src/components/CustomModal.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
+    IconMdiChevronDown: typeof import('~icons/mdi/chevron-down')['default']
     IconMdiChevronLeft: typeof import('~icons/mdi/chevron-left')['default']
     IconMdiChevronRight: typeof import('~icons/mdi/chevron-right')['default']
     IconMdiFileDocumentOutline: typeof import('~icons/mdi/file-document-outline')['default']
