@@ -29,3 +29,8 @@ health endpoint: http://localhost:8080/actuator/health
 ### Architecture diagram
 
 ![Architecture diagram](.doc/img.png)
+
+### Starting method
+```bash
+scripts\start.bat
+```
