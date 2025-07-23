@@ -1,4 +1,3 @@
-# Project
 cowrite:
   name: CoWrite-Backend
   version: @project.version@  # Maven属性注入
@@ -7,17 +6,15 @@ cowrite:
     owner: CoWrite Team
     since-year: 2025
     license: MIT
-
-  # JWT CONFIG
+  # 自定义JWT配置
   jwt:
     secret: 6Vvq8$fG3jKlP2mNpQs5tRwUyXzA7B+C9D-E)  # 示例密钥，实际应使用生成的随机字符串
     expiration: 86400000
     header: Authorization
     token-start: Bearer
-
-  # STORE
+  #对象存储
   storage:
-    type: minio  # 支持 local、minio、cos
+    type: local  # 支持 local、minio、cos
     minio-endpoint:
     minio-access-key:
     minio-secret-key:
@@ -48,7 +45,7 @@ spring:
       enabled: true
       path: /h2-console  # 访问路径
 
-  # EMAIL
+  #邮箱
   mail:
     host: smtp.zoho.com
     port: 465
@@ -65,7 +62,7 @@ spring:
     default-encoding: UTF-8
     test-connection: true  # 启动时测试连接
 
-  # REDIS
+  # redis
   redis:
     database: 1
     host: localhost
@@ -73,7 +70,7 @@ spring:
     timeout: 5000
     password:
 
-# ORM CONFIG
+# ORM 配置
 mybatis-plus:
   type-handlers-package: com.cowrite.project.common.typehandler
   mapper-locations: classpath*:/mapper/**/*.xml               # Mapper XML 文件路径
@@ -91,9 +88,6 @@ mybatis-plus:
 
 
 management:
-  health:
-    redis:
-      enabled: true
   endpoints:
     web:
       exposure:
