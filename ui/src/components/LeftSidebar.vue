@@ -69,6 +69,18 @@
 
     <!-- Menu items -->
     <nav class="menu" v-if="!collapsed">
+
+      <!-- 新增：开始创作（放在AI写作上方） -->
+      <div
+          class="menu-item"
+          @click="handleMenuClick(startCreateItem)"
+          :class="{ active: selectedMenuItem === startCreateItem.id }"
+      >
+        <i class="iconfont icon-create" />
+        <span class="label">✏️ {{ startCreateItem.label }}</span>
+        <span class="hover-effect"></span>
+      </div>
+
       <div
           v-for="item in menuItems"
           :key="item.id"
@@ -125,15 +137,27 @@ const menuItems = ref([
   { id: 'draft', label: '草稿箱', icon: 'icon-file', emoji: '📝' },
 ]);
 
+// 新增：开始创作功能项数据
+const startCreateItem = {
+  id: 'startCreate',
+  label: '开始创作',
+  icon: 'icon-create' // 确保项目中有该图标类名
+};
+
+// 新增：选中状态管理（默认选中“开始创作”）
+const selectedMenuItem = ref<string>(startCreateItem.id);
+
+// 修改原有点击事件（添加选中状态切换）
+function handleMenuClick(item: any) {
+  console.log('功能点击：', item);
+  selectedMenuItem.value = item.id; // 点击时切换选中项
+}
+
 const repositories = ref([
   { id: 1, name: '语雀项目文档' },
   { id: 2, name: '前端知识库' },
   { id: 3, name: '个人随笔' },
 ]);
-
-function handleMenuClick(item: any) {
-  console.log('功能点击：', item);
-}
 
 function selectRepository(repo: any) {
   console.log('选择知识库：', repo);
@@ -407,6 +431,17 @@ function selectRepository(repo: any) {
 /* Menu styles */
 .menu {
   margin-bottom: 1.5rem;
+}
+
+/* 功能菜单选中状态（与hover效果统一风格） */
+.menu-item.active {
+  background-color: #f3eeff;
+  color: #5e4dcd;
+}
+
+/* 选中时激活hover动画效果（复用原有过渡） */
+.menu-item.active .hover-effect {
+  width: 100%;
 }
 
 .menu-item {
