@@ -18,5 +18,9 @@ if exist node_modules (
 
 start npm run dev
 
+cd backend
+
+node server.cjs
+
 echo 所有服务已启动！
 pause

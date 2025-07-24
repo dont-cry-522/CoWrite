@@ -20,4 +20,8 @@ fi
 # 启动 Vue 开发服务器
 npm run dev
 
+cd backend
+
+node server.cjs
+
 echo "所有服务已启动！"
