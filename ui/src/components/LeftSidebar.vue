@@ -1,7 +1,7 @@
 <template>
   <aside class="left-sidebar" :class="{ collapsed }">
     <!-- Collapse trigger -->
-    <div class="collapse-trigger" @click="collapsed = !collapsed">
+    <div class="collapse-trigger" @click="toggleSidebar">
       <IconMdiChevronRight v-if="collapsed" />
       <IconMdiChevronLeft v-else />
     </div>
@@ -16,7 +16,7 @@
       <div class="user-org-card">
         <div class="user-org">
           <img class="avatar" :src="userInfo?.avatarUrl" alt="avatar" />
-          <div class="user-meta">
+          <div class="user-meta" v-if="!collapsed">
             <div class="nickname">👤 {{ userInfo?.username }}</div>
           </div>
         </div>
@@ -143,6 +143,13 @@ const goToSettings = () => {
   router.push('/back/settings');  // 根据你的路由配置进行跳转
 };
 
+function toggleSidebar() {
+  collapsed.value = !collapsed.value;
+  if (collapsed.value) {
+    showUserPanel.value = false;
+  }
+}
+
 // 退出登录
 const logout = async () => {
   try {
@@ -183,17 +190,17 @@ function selectRepository(repo: any) {
 }
 
 .left-sidebar.collapsed {
-  width: 24px;
+  width: 45px;
   padding: 1.5rem 0.5rem 0;
 }
 
 /* 折叠按钮 - 核心修改 */
 .collapse-trigger {
   position: absolute;
-  top: 16px;
+  top: 2px;
   right: 5px;
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   background: #ffffff;
   border-radius: 50%;
   box-shadow: 0 2px 8px rgba(148, 108, 230, 0.2);
@@ -220,14 +227,8 @@ function selectRepository(repo: any) {
 
 /* 用户卡牌 - 辅助调整（避免遮挡按钮） */
 .user-org-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f9f5ff 100%);
   border-radius: 12px;
-  padding: 1rem;
-  border: 1px solid rgba(232, 224, 245, 0.6);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-      0 2px 8px rgba(148, 108, 230, 0.05),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   z-index: 10; /* 低于折叠按钮的 z-index */
   position: relative; /* 确保 z-index 生效 */
 }
@@ -553,5 +554,6 @@ function selectRepository(repo: any) {
 .user-panel-wrapper {
   position: relative;
   display: inline-block;
+  margin-top: 16px;
 }
 </style>
