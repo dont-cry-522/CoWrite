@@ -155,7 +155,6 @@ onMounted(() => {
 .notification-view {
   padding: 32px;
   background: #f9fafb;
-  min-height: 100%;
   font-family: system-ui, sans-serif;
 }
 

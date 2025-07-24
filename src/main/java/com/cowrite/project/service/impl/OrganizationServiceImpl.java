@@ -3,6 +3,8 @@ package com.cowrite.project.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cowrite.project.common.anno.Loggable;
+import com.cowrite.project.common.enums.LogType;
 import com.cowrite.project.mapper.OrganizationMapper;
 import com.cowrite.project.mapper.OrganizationMemberMapper;
 import com.cowrite.project.mapper.UserMapper;
@@ -32,6 +34,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
      * 用户获取已参与的组织
      */
     @Override
+    @Loggable(type = LogType.ORG_MODULE, value = "用户获取组织")
     public List<Organization> getOrganizationsByUser(User currentUser) {
         return super.list(new LambdaQueryWrapper<Organization>().in(
                 Organization::getId,
@@ -48,6 +51,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
      * 获取组织成员列表
      */
     @Override
+    @Loggable(type = LogType.ORG_MODULE, value = "获取组织成员列表")
     public List<User> getMembersByOrganizationId(Long organizationId) {
         List<Long> userIds = organizationMemberMapper.selectList(
                         new LambdaQueryWrapper<OrganizationMember>()
@@ -65,6 +69,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
      * 设置组织成员角色
      */
     @Override
+    @Loggable(type = LogType.ORG_MODULE, value = "设置组织成员角色")
     public Boolean setMemberRole(Long organizationId, Long userId, String role) {
         OrganizationMember organizationMember = organizationMemberMapper.selectOne(
                 new LambdaQueryWrapper<OrganizationMember>()
@@ -82,6 +87,7 @@ public class OrganizationServiceImpl extends ServiceImpl<OrganizationMapper, Org
      * 移除组织成员
      */
     @Override
+    @Loggable(type = LogType.ORG_MODULE, value = "移除组织成员")
     public Boolean removeMember(Long organizationId, Long userId) {
         OrganizationMember organizationMember = organizationMemberMapper.selectOne(
                 new LambdaQueryWrapper<OrganizationMember>()

@@ -28,6 +28,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
         registry.addInterceptor(userInterceptor)
                 .addPathPatterns("/api/users/upload-avatar","/api/users/update")
                 .addPathPatterns("/api/notification/**")
+                .addPathPatterns("/api/operator/**")
                 .addPathPatterns("/api/organization/organized","/api/organization/switch","/api/organization/{organizationId}/member/{userId}",
                                  "/api/organization/{organizationId}/member/{userId}/role","/api/organization/{organizationId}/members");
     }

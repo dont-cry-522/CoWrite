@@ -1,85 +1,165 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { Settings, Sun, Moon, Bell, Languages } from 'lucide-vue-next';
 
-const router = useRouter();
+const isDarkMode = ref(false);
+const notificationsEnabled = ref(true);
+const language = ref('zh-CN');
 
-function goTo(path: string) {
-  router.push(path);
-}
+const toggleTheme = () => {
+  isDarkMode.value = !isDarkMode.value;
+};
+
+const toggleNotifications = () => {
+  notificationsEnabled.value = !notificationsEnabled.value;
+};
+
+const changeLanguage = (e: Event) => {
+  const target = e.target as HTMLSelectElement;
+  language.value = target.value;
+};
 </script>
 
 <template>
-  <div class="home-view">
-    <h1 class="title">欢迎来到管理后台</h1>
-    <p class="subtitle">这里是您的数据控制中心，您可以在这里快速访问常用功能。</p>
+  <div class="settings-view">
+    <div class="header">
+      <Settings class="icon" />
+      <h1 class="title">系统设置</h1>
+    </div>
+    <p class="subtitle">自定义您的偏好设置，让系统更贴合您的使用习惯。</p>
 
-    <div class="quick-links">
-      <div class="card" @click="goTo('/back/users')">
-        <h3>用户管理</h3>
-        <p>查看和管理平台用户</p>
+    <div class="setting-section">
+      <!-- 主题切换 -->
+      <div class="setting-card">
+        <div class="setting-icon">
+          <component :is="isDarkMode ? Moon : Sun" class="icon" />
+        </div>
+        <div class="setting-info">
+          <h3>主题模式</h3>
+          <p>{{ isDarkMode ? '深色模式' : '浅色模式' }}</p>
+        </div>
+        <button @click="toggleTheme">
+          切换为{{ isDarkMode ? '浅色' : '深色' }}
+        </button>
       </div>
-      <div class="card" @click="goTo('/back/settings')">
-        <h3>系统设置</h3>
-        <p>配置系统参数与权限</p>
+
+      <!-- 通知开关 -->
+      <div class="setting-card">
+        <div class="setting-icon">
+          <Bell class="icon" />
+        </div>
+        <div class="setting-info">
+          <h3>通知提醒</h3>
+          <p>{{ notificationsEnabled ? '已开启通知' : '通知已关闭' }}</p>
+        </div>
+        <button @click="toggleNotifications">
+          {{ notificationsEnabled ? '关闭通知' : '开启通知' }}
+        </button>
       </div>
-      <div class="card" @click="goTo('/back/stats')">
-        <h3>数据统计</h3>
-        <p>了解平台实时数据</p>
+
+      <!-- 语言设置 -->
+      <div class="setting-card">
+        <div class="setting-icon">
+          <Languages class="icon" />
+        </div>
+        <div class="setting-info">
+          <h3>界面语言</h3>
+          <p>{{ language === 'zh-CN' ? '简体中文' : 'English' }}</p>
+        </div>
+        <select :value="language" @change="changeLanguage">
+          <option value="zh-CN">简体中文</option>
+          <option value="en-US">English</option>
+        </select>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.home-view {
+.settings-view {
   padding: 32px;
   background-color: #f9fafb;
   min-height: 100%;
+  font-family: system-ui, sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  color: #5e4dcd;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
-  margin-bottom: 8px;
   color: #1e293b;
 }
 
 .subtitle {
-  font-size: 16px;
+  font-size: 15px;
   color: #64748b;
   margin-bottom: 24px;
 }
 
-.quick-links {
+.setting-section {
   display: flex;
+  flex-direction: column;
   gap: 20px;
-  flex-wrap: wrap;
 }
 
-.card {
-  background-color: white;
+.setting-card {
+  background: white;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 20px;
-  width: 240px;
-  cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.setting-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #eef2ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.card h3 {
-  font-size: 18px;
+.setting-info h3 {
+  font-size: 16px;
+  font-weight: 600;
   color: #0f172a;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
-.card p {
+.setting-info p {
   font-size: 14px;
-  color: #6b7280;
+  color: #64748b;
+}
+
+button,
+select {
+  background: #5e4dcd;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover,
+select:hover {
+  background: #4c3cad;
 }
 </style>

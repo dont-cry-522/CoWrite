@@ -28,7 +28,6 @@ const menuItems = [
   { label: '个人日志', icon: FileTextIcon, path: '/back/logs' },
   { label: '账号管理', icon: ShieldIcon, path: '/back/account' },
   { label: '设置', icon: SettingsIcon, path: '/back/settings' },
-  { label: '用户', icon: UsersIcon, path: '/back/users' },
   { label: '数据统计', icon: BarChartIcon, path: '/back/stats' },
 ];
 

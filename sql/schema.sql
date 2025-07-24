@@ -240,7 +240,7 @@ CREATE TABLE `hib_tag`
     `deleted`    TINYINT(1)  DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='标签表';
+COLLATE = utf8mb4_unicode_ci COMMENT ='标签表';
 
 # Document Tag
 CREATE TABLE `hib_document_tag`

@@ -158,7 +158,6 @@ const handleAvatarUpload = async (file: File) => {
 .profile-page {
   padding: 32px;
   background-color: #f9fafb;
-  min-height: 100%;
 }
 
 /* Profile Header */

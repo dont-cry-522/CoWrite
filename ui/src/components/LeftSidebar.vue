@@ -6,13 +6,12 @@
       <IconMdiChevronLeft v-else />
     </div>
 
-    <!-- User card with hover effect -->
+    <!-- User card -->
     <div
         class="user-panel-wrapper"
         @mouseenter="showUserPanel = true"
         @mouseleave="showUserPanel = false"
     >
-      <!-- 用户卡片 -->
       <div class="user-org-card">
         <div class="user-org">
           <img class="avatar" :src="userInfo?.avatarUrl" alt="avatar" />
@@ -22,7 +21,6 @@
         </div>
       </div>
 
-      <!-- 悬浮面板 -->
       <transition name="fade">
         <div class="user-panel" v-show="showUserPanel">
           <div class="panel-header">
@@ -55,10 +53,8 @@
       </button>
     </div>
 
-    <!-- Menu items -->
+    <!-- 功能菜单项 -->
     <nav class="menu" v-if="!collapsed">
-
-      <!-- 新增：开始创作（放在AI写作上方） -->
       <div
           class="menu-item"
           @click="handleMenuClick(startCreateItem)"
@@ -74,6 +70,7 @@
           :key="item.id"
           class="menu-item"
           @click="handleMenuClick(item)"
+          :class="{ active: selectedMenuItem === item.id }"
       >
         <i :class="['iconfont', item.icon]" />
         <span class="label">{{ item.emoji }} {{ item.label }}</span>
@@ -81,7 +78,7 @@
       </div>
     </nav>
 
-    <!-- Repositories list -->
+    <!-- 知识库区域 -->
     <div class="repos" v-if="!collapsed">
       <h3 class="section-title">📚 我的知识库</h3>
       <ul class="repo-list">
@@ -100,79 +97,72 @@
   </aside>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-const collapsed = ref(false);
-const showUserPanel = ref(false);
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
-import Select from "./Select.vue";
-const { getUserInfo, clearAuth } = useAuth();
+
+// Emits
+const emit = defineEmits(['menuClick', 'repoClick'])
+
+const collapsed = ref(false)
+const showUserPanel = ref(false)
+const selectedMenuItem = ref<string>('startCreate')
+
+const { getUserInfo, clearAuth } = useAuth()
 const userInfo = getUserInfo
-// Vue Router
-const router = useRouter();
+const router = useRouter()
+
+// 菜单功能项
 const menuItems = ref([
   { id: 'ai', label: 'AI 写作', icon: 'icon-robot', emoji: '🤖' },
   { id: 'star', label: '收藏', icon: 'icon-star', emoji: '⭐' },
-  { id: 'draft', label: '草稿箱', icon: 'icon-file', emoji: '📝' },
-]);
+  { id: 'draft', label: '草稿箱', icon: 'icon-file', emoji: '📝' }
+])
 
-// 新增：开始创作功能项数据
 const startCreateItem = {
   id: 'startCreate',
   label: '开始创作',
-  icon: 'icon-create' // 确保项目中有该图标类名
-};
-
-// 新增：选中状态管理（默认选中“开始创作”）
-const selectedMenuItem = ref<string>(startCreateItem.id);
-
-// 修改原有点击事件（添加选中状态切换）
-function handleMenuClick(item: any) {
-  console.log('功能点击：', item);
-  selectedMenuItem.value = item.id; // 点击时切换选中项
+  icon: 'icon-create'
 }
 
-// 跳转到创作中心
-const goToCreationCenter = () => {
-  router.push('/back/stats');  // 根据你的路由配置进行跳转
-};
-
-// 跳转到设置页
-const goToSettings = () => {
-  router.push('/back/settings');  // 根据你的路由配置进行跳转
-};
-
-function toggleSidebar() {
-  collapsed.value = !collapsed.value;
-  if (collapsed.value) {
-    showUserPanel.value = false;
-  }
-}
-
-// 退出登录
-const logout = async () => {
-  try {
-    // 发送登出请求（根据你的 API 调整）
-    // await api.userApi.logout(); // 如果有需要注销的请求
-    // 清除本地存储的 Token 和用户信息
-    clearAuth();
-    // 跳转到登录页
-    router.push('/login');
-  } catch (error) {
-    console.error('退出登录失败:', error);
-    alert('退出登录失败，请稍后再试');
-  }
-};
-
+// 仓库数据
 const repositories = ref([
   { id: 1, name: '语雀项目文档' },
   { id: 2, name: '前端知识库' },
-  { id: 3, name: '个人随笔' },
-]);
+  { id: 3, name: '个人随笔' }
+])
+
+function handleMenuClick(item: any) {
+  selectedMenuItem.value = item.id
+  emit('menuClick', item)
+}
 
 function selectRepository(repo: any) {
-  console.log('选择知识库：', repo);
+  emit('repoClick', repo)
+}
+
+function toggleSidebar() {
+  collapsed.value = !collapsed.value
+  if (collapsed.value) showUserPanel.value = false
+}
+
+function goToCreationCenter() {
+  router.push('/back/stats')
+}
+
+function goToSettings() {
+  router.push('/back/settings')
+}
+
+async function logout() {
+  try {
+    clearAuth()
+    router.push('/login')
+  } catch (error) {
+    console.error('退出登录失败:', error)
+    alert('退出登录失败，请稍后再试')
+  }
 }
 </script>
 
