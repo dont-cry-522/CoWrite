@@ -5,7 +5,6 @@ import Documents from '../views/Documents.vue';
 import BackLayout from "../layout/BackLayout.vue";
 import StatsView from "../views/back/StatsView.vue"
 import AIPluginsView from "../views/back/AIPluginsView.vue"
-import PreferencesView from "../views/back/PreferencesView.vue"
 import ProfileView from "../views/back/ProfileView.vue"
 import NotificationSettingsView from "../views/back/NotificationSettingsView.vue"
 import PersonalLogsView from "../views/back/PersonalLogsView.vue"
@@ -44,16 +43,45 @@ const routes = [
     path: '/back',
     component: BackLayout,
     children: [
-      { path: '', component: HomeView, transition: 'fade' },
-      { path: 'stats', component: StatsView, transition: 'fade' },
-      { path: 'ai-plugins', component: AIPluginsView },
-      { path: 'preferences', component: PreferencesView },
-      { path: 'profile', component: ProfileView },
-      { path: 'notifications', component: NotificationSettingsView },
-      { path: 'logs', component: PersonalLogsView },
-      { path: 'account', component: AccountManagementView },
-      { path: 'settings', component: SettingsView, transition: 'fade' },
-      { path: 'users', component: UserListView }
+      {
+        path: '',
+        component: HomeView,
+        transition: 'fade'
+      },
+      {
+        path: 'stats',
+        component: StatsView,
+        transition: 'fade'
+      },
+      {
+        path: 'ai-plugins',
+        component: AIPluginsView
+      },
+      {
+        path: 'profile',
+        component: ProfileView
+      },
+      {
+        path: 'notifications',
+        component: NotificationSettingsView
+      },
+      {
+        path: 'logs',
+        component: PersonalLogsView
+      },
+      {
+        path: 'account',
+        component: AccountManagementView
+      },
+      {
+        path: 'settings',
+        component: SettingsView,
+        transition: 'fade'
+      },
+      {
+        path: 'users',
+        component: UserListView
+      }
     ],
     meta: { requiresAuth: true }
   }
@@ -81,4 +109,4 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-export default router; 
+export default router;

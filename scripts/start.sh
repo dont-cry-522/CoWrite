@@ -20,6 +20,8 @@ fi
 # 启动 Vue 开发服务器
 npm run dev
 
+# 启动 Vue 前端服务
+echo "启动 Nodejs 本地服务..."
 cd backend
 
 node server.cjs

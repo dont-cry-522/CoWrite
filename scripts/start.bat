@@ -20,6 +20,9 @@ start npm run dev
 
 cd backend
 
+:: 启动 Vue 前端服务
+echo 启动 Nodejs 本地服务...
+
 node server.cjs
 
 echo 所有服务已启动！

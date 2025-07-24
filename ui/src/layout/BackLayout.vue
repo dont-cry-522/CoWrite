@@ -23,7 +23,6 @@ const collapsed = ref(false);
 const menuItems = [
   { label: '首页', icon: HomeIcon, path: '/back/' },
   { label: 'AI 插件', icon: BotIcon, path: '/back/ai-plugins' },
-  { label: '偏好设置', icon: SlidersHorizontalIcon, path: '/back/preferences' },
   { label: '个人中心', icon: UserCircleIcon, path: '/back/profile' },
   { label: '消息设置', icon: BellIcon, path: '/back/notifications' },
   { label: '个人日志', icon: FileTextIcon, path: '/back/logs' },
