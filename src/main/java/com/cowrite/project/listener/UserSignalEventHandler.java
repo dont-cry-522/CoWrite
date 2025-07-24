@@ -1,10 +1,15 @@
 package com.cowrite.project.listener;
 
+import com.cowrite.project.model.entity.Organization;
 import com.cowrite.project.model.entity.User;
+import com.cowrite.project.model.vo.UserVO;
 import com.cowrite.project.service.EmailService;
+import com.cowrite.project.service.OrganizationService;
 import com.hibiscus.signal.Signals;
 import com.hibiscus.signal.core.SignalContext;
 import com.hibiscus.signal.spring.anno.SignalHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -18,10 +23,15 @@ public class UserSignalEventHandler {
 
     private final EmailService emailService;
 
+    private final OrganizationService organizationService;
+
     private final Signals signals;
 
-    public UserSignalEventHandler(EmailService emailService, Signals signals) {
+    private static final Logger log = LoggerFactory.getLogger(UserSignalEventHandler.class);
+
+    public UserSignalEventHandler(EmailService emailService, OrganizationService organizationService, Signals signals) {
         this.emailService = emailService;
+        this.organizationService = organizationService;
         this.signals = signals;
     }
 
@@ -33,7 +43,7 @@ public class UserSignalEventHandler {
                 System.out.println("键: "+params.getKey() + "  值:" + params.getValue());
             }
         }
-        String result = (String) signalContext.getAttributes().get(EVENT_INTER_MEDIATE_RESULT);
+        UserVO result = (UserVO) signalContext.getAttributes().get(EVENT_INTER_MEDIATE_RESULT);
         System.out.println("函数结果: "+result);
 
         User user = (User) signalContext.getIntermediateValues().get(EVENT_INTER_MEDIATE_USER);
@@ -49,11 +59,31 @@ public class UserSignalEventHandler {
                 System.out.println("键: "+params.getKey() + "  值:" + params.getValue());
             }
         }
-        String result = (String) signalContext.getAttributes().get(EVENT_INTER_MEDIATE_RESULT);
+        UserVO result = (UserVO) signalContext.getAttributes().get(EVENT_INTER_MEDIATE_RESULT);
         System.out.println("函数结果: "+result);
 
         User user = (User) signalContext.getIntermediateValues().get(EVENT_INTER_MEDIATE_USER);
         System.out.println("用户登录事件处理: " + user + "登陆成功");
+
+        // send welcome email
         emailService.sendWelcomeEmail(user.getUsername(), user.getEmail());
+
+        // init user Organization
+        try {
+            Organization org = Organization.builder()
+                    .name(user.getUsername() + "'s Organization")
+                    .description("Default organization for user: " + user.getUsername())
+                    .ownerId(user.getId())
+                    .status("active")
+                    .published("no")
+                    .maxMembers(10)
+                    .currentMembers(1L)
+                    .build();
+
+            organizationService.save(org);
+            log.info("user: {} init organization successful", user.getUsername());
+        } catch (Exception e) {
+            log.error("user: {} init organization failed: {}", user.getUsername(), e.getMessage(), e);
+        }
     }
 }

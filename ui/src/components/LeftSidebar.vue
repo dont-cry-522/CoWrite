@@ -18,13 +18,6 @@
           <img class="avatar" :src="userInfo?.avatarUrl" alt="avatar" />
           <div class="user-meta">
             <div class="nickname">👤 {{ userInfo?.username }}</div>
-            <select class="org-selector" v-model="currentOrg">
-              <option disabled value="">选择组织</option>
-              <option value="">个人空间</option>
-              <option v-for="org in orgOptions" :key="org" :value="org">
-                {{ org }}
-              </option>
-            </select>
           </div>
         </div>
       </div>
@@ -111,11 +104,9 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 const collapsed = ref(false);
-const currentOrg = ref<string>('');
-const orgOptions = ref(['我的组织', '团队 Alpha', '写作小组']);
 const showUserPanel = ref(false);
-import api from '../api/index'
 import { useAuth } from '../composables/useAuth'
+import Select from "./Select.vue";
 const { getUserInfo, clearAuth } = useAuth();
 const userInfo = getUserInfo
 // Vue Router
