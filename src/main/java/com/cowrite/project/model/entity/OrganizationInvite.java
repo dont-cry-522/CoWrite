@@ -66,6 +66,15 @@ public class OrganizationInvite extends BaseEntity implements Serializable {
     @TableField("expires_at")
     private LocalDateTime expiresAt;
 
+    /*
+    * 判断当前 OrgInvite（组织邀请）是否已过期
+    * 条件1：expiresAt 不为 null（即设置了过期时间）
+    * 条件2：expiresAt 的时间早于当前系统时间（LocalDateTime.now()）
+    */
+    public boolean isExpired() {
+        return expiresAt != null && expiresAt.isBefore(LocalDateTime.now());
+    }
+
     public Long getId() {
         return id;
     }
