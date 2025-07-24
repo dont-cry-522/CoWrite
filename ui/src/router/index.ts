@@ -6,7 +6,7 @@ import BackLayout from "../layout/BackLayout.vue";
 import StatsView from "../views/back/StatsView.vue"
 import AIPluginsView from "../views/back/AIPluginsView.vue"
 import ProfileView from "../views/back/ProfileView.vue"
-import NotificationSettingsView from "../views/back/NotificationSettingsView.vue"
+import NotificationView from "../views/back/NotificationView.vue"
 import PersonalLogsView from "../views/back/PersonalLogsView.vue"
 import AccountManagementView from "../views/back/AccountManagementView.vue"
 import SettingsView from "../views/back/SettingsView.vue"
@@ -63,7 +63,7 @@ const routes = [
       },
       {
         path: 'notifications',
-        component: NotificationSettingsView
+        component: NotificationView
       },
       {
         path: 'logs',

@@ -24,7 +24,7 @@ const menuItems = [
   { label: '首页', icon: HomeIcon, path: '/back/' },
   { label: 'AI 插件', icon: BotIcon, path: '/back/ai-plugins' },
   { label: '个人中心', icon: UserCircleIcon, path: '/back/profile' },
-  { label: '消息设置', icon: BellIcon, path: '/back/notifications' },
+  { label: '我的消息', icon: BellIcon, path: '/back/notifications' },
   { label: '个人日志', icon: FileTextIcon, path: '/back/logs' },
   { label: '账号管理', icon: ShieldIcon, path: '/back/account' },
   { label: '设置', icon: SettingsIcon, path: '/back/settings' },

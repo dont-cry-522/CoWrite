@@ -31,8 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.cowrite.project.common.constants.CommonEventConstants.EVENT_INTER_MEDIATE_REQUEST;
 import static com.cowrite.project.common.constants.UserConstants.*;
-import static com.cowrite.project.common.constants.UserEventConstants.EVENT_INTER_MEDIATE_USER;
-import static com.cowrite.project.common.constants.UserEventConstants.USER_REGISTER_EVENT;
+import static com.cowrite.project.common.constants.UserEventConstants.*;
 import static com.cowrite.project.common.enums.ResponseCodeEnum.RATE_LIMIT_EXCEEDED;
 import static com.cowrite.project.common.enums.ResponseCodeEnum.SYSTEM_ERROR;
 import static com.cowrite.project.utils.CodeUtil.generateRandomCode;
@@ -143,6 +142,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     @Transactional
+    @SignalEmitter(USER_LOGIN_EVENT)
     public UserVO loginByEmail(UserEmailRequest userEmailRequest, HttpServletRequest request) {
         String email = userEmailRequest.getEmail();
         if (!CommonCheckUtils.isValidEmail(email)) {

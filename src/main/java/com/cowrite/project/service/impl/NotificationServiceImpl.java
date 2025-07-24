@@ -91,7 +91,6 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             notification.setRead(true);
             notification.setReadTime(LocalDateTime.now());
         }
-
         updateBatchById(unreadList);
     }
 
