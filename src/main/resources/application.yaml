@@ -14,12 +14,11 @@ cowrite:
     token-start: Bearer
   #对象存储
   storage:
-    type: local  # 支持 local、minio、cos
-    minio-endpoint:
-    minio-access-key:
-    minio-secret-key:
-    minio-bucket:
-    local-base-path: /tmp/uploads
+
+
+  invite:
+    base-url: http://localhost:8080/api/org_invite/link/
+    font-url: http://localhost:3000/invite
 
 server:
   port: 8080
