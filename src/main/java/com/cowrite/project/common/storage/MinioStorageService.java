@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 
+import static com.cowrite.project.common.constants.Constants.HTTP;
+import static com.cowrite.project.common.constants.Constants.HTTPS;
 import static com.cowrite.project.common.enums.ResponseCodeEnum.SYSTEM_ERROR;
 
 
@@ -77,10 +79,17 @@ public class MinioStorageService implements FileStorageAdapter {
     @Override
     public void delete(String path) {
         try {
+            String filename = path;
+            if (path.startsWith(HTTP) || path.startsWith(HTTPS)) {
+                int lastSlashIndex = path.lastIndexOf('/');
+                if (lastSlashIndex != -1 && lastSlashIndex < path.length() - 1) {
+                    filename = path.substring(lastSlashIndex + 1);
+                }
+            }
             minioClient.removeObject(
                     RemoveObjectArgs.builder()
                             .bucket(properties.getMinioBucket())
-                            .object(path)
+                            .object(filename)
                             .build());
         } catch (Exception e) {
             throw new RuntimeException("MinIO删除失败", e);

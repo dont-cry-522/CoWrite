@@ -81,6 +81,12 @@ public class User extends BaseEntity implements Serializable {
     @TableField("bio")
     private String bio;
 
+    /**
+     * 当前组织ID
+     */
+    @TableField("current_organization_id")
+    private Long currentOrganizationId;
+
 
     public User(){
 
@@ -190,10 +196,15 @@ public class User extends BaseEntity implements Serializable {
         this.bio = bio;
     }
 
+    public Long getCurrentOrganizationId() {
+        return currentOrganizationId;
+    }
 
+    public void setCurrentOrganizationId(Long currentOrganizationId) {
+        this.currentOrganizationId = currentOrganizationId;
+    }
 
-
-    public void update(String username, String email,String  password, String avatarUrl, String status) {
+    public void update(String username, String email, String  password, String avatarUrl, String status) {
         if (username != null) this.username = username;
         if (email != null) this.email = email;
         if (avatarUrl != null) this.avatarUrl = avatarUrl;

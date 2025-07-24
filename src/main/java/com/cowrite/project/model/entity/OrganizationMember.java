@@ -112,4 +112,59 @@ public class OrganizationMember extends BaseEntity implements Serializable {
                 ", joinedAt=" + joinedAt +
                 '}';
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Long id;
+        private Long organizationId;
+        private Long userId;
+        private String role;
+        private String status;
+        private LocalDateTime joinedAt;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder organizationId(Long organizationId) {
+            this.organizationId = organizationId;
+            return this;
+        }
+
+        public Builder userId(Long userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder role(String role) {
+            this.role = role;
+            return this;
+        }
+
+        public Builder status(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder joinedAt(LocalDateTime joinedAt) {
+            this.joinedAt = joinedAt;
+            return this;
+        }
+
+        public OrganizationMember build() {
+            OrganizationMember member = new OrganizationMember();
+            member.setId(this.id);
+            member.setOrganizationId(this.organizationId);
+            member.setUserId(this.userId);
+            member.setRole(this.role);
+            member.setStatus(this.status);
+            member.setJoinedAt(this.joinedAt);
+            return member;
+        }
+    }
+
 }

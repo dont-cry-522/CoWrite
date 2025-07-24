@@ -5,10 +5,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cowrite.project.common.ApiResponse;
 import com.cowrite.project.common.PageRequest;
 import com.cowrite.project.model.entity.Organization;
+import com.cowrite.project.model.entity.User;
 import com.cowrite.project.service.OrganizationService;
+import com.cowrite.project.service.UserService;
 import com.j256.simplemagic.logger.Logger;
 import com.j256.simplemagic.logger.LoggerFactory;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,76 +34,65 @@ public class OrganizationController {
 
     /**
      * 组织服务
-     * 负责处理组织相关的业务逻辑
      */
     private final OrganizationService organizationService;
 
-    public OrganizationController(OrganizationService organizationService) {
+    /**
+     * 用户服务
+     */
+    private final UserService userService;
+
+    public OrganizationController(OrganizationService organizationService, UserService userService) {
         this.organizationService = organizationService;
+        this.userService = userService;
     }
 
     /**
-     * 新增 Organization 记录
+     * 查询当前用户拥有的组织
      */
-    @PostMapping
-    public ApiResponse<Boolean> add(@RequestBody Organization entity) {
-        return ApiResponse.success(organizationService.save(entity));
+    @GetMapping("/organized")
+    @ApiOperation("用户获取已参与的组织")
+    public ApiResponse<List<Organization>> getOrganizations(){
+        User currentUser = userService.getCurrentUser();
+        return ApiResponse.success(organizationService.getOrganizationsByUser(currentUser));
     }
 
     /**
-     * 更新 Organization 记录
+     * 获取组织成员列表
      */
-    @PutMapping("/{id}")
-    public ApiResponse<Boolean> update(@RequestBody Organization entity) {
-        return ApiResponse.success(organizationService.updateById(entity));
+    @ApiOperation("获取组织成员列表")
+    @GetMapping("/{organizationId}/members")
+    public ApiResponse<List<User>> getOrganizationMembers(@PathVariable Long organizationId) {
+        return ApiResponse.success(organizationService.getMembersByOrganizationId(organizationId));
+    }
+
+    @ApiOperation("切换当前组织")
+    @PostMapping("/switch")
+    public ApiResponse<Boolean> switchOrganization(@RequestParam Long organizationId) {
+        organizationService.switchCurrentOrganization(userService.getCurrentUser(), organizationId);
+        return ApiResponse.success(true);
     }
 
     /**
-     * 删除指定 ID 的 Organization 记录
+     * 设置组织成员角色
      */
-    @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> delete(@PathVariable("id") Integer id) {
-        return ApiResponse.success(organizationService.removeById(id));
+    @ApiOperation("设置组织成员角色")
+    @PostMapping("/{organizationId}/member/{userId}/role")
+    public ApiResponse<Boolean> setMemberRole(
+            @PathVariable Long organizationId,
+            @PathVariable Long userId,
+            @RequestParam String role) {
+        return ApiResponse.success(organizationService.setMemberRole(organizationId, userId, role));
     }
 
     /**
-     * 根据 ID 获取 Organization 详情
+     * 移除组织成员
      */
-    @GetMapping("/{id}")
-    public ApiResponse<Organization> get(@PathVariable("id") Integer id) {
-        return ApiResponse.success(organizationService.getById(id));
-    }
-
-    /**
-     * 获取所有 Organization 列表（不分页）
-     */
-    @GetMapping
-    public ApiResponse<List<Organization>> list() {
-        return ApiResponse.success(organizationService.list());
-    }
-
-    /**
-     * 分页查询 Organization 列表
-     */
-    @PostMapping("/page")
-    public ApiResponse<Page<Organization>> getPage(@RequestBody PageRequest pageRequest) {
-        // 创建分页对象
-        Page<Organization> page = new Page<>(pageRequest.getPage(), pageRequest.getSize());
-
-        // 构造查询条件
-        QueryWrapper<Organization> wrapper = new QueryWrapper<>();
-
-        // 如果有关键字，进行模糊查询
-        if (pageRequest.getKeyword() != null && !pageRequest.getKeyword().isEmpty()) {
-            wrapper.like("name", pageRequest.getKeyword()); // 可以自定义字段（如“name”）
-        }
-
-        // 如果有排序字段，进行排序
-        if (pageRequest.getSortBy() != null && !pageRequest.getSortBy().isEmpty()) {
-            wrapper.orderBy(true, "asc".equalsIgnoreCase(pageRequest.getSortOrder()), pageRequest.getSortBy());
-        }
-
-        // 返回分页结果
-        return ApiResponse.success(organizationService.page(page, wrapper));
+    @ApiOperation("移除组织成员")
+    @DeleteMapping("/{organizationId}/member/{userId}")
+    public ApiResponse<Boolean> removeMember(
+            @PathVariable Long organizationId,
+            @PathVariable Long userId) {
+        return ApiResponse.success(organizationService.removeMember(organizationId, userId));
     }
 }

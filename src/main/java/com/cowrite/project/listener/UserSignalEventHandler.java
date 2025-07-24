@@ -1,9 +1,11 @@
 package com.cowrite.project.listener;
 
 import com.cowrite.project.model.entity.Organization;
+import com.cowrite.project.model.entity.OrganizationMember;
 import com.cowrite.project.model.entity.User;
 import com.cowrite.project.model.vo.UserVO;
 import com.cowrite.project.service.EmailService;
+import com.cowrite.project.service.OrganizationMemberService;
 import com.cowrite.project.service.OrganizationService;
 import com.hibiscus.signal.Signals;
 import com.hibiscus.signal.core.SignalContext;
@@ -12,9 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import static com.cowrite.project.common.constants.CommonEventConstants.EVENT_INTER_MEDIATE_RESULT;
+import static com.cowrite.project.common.constants.OrganizationConstants.ORG_STATUS_ACTIVE;
+import static com.cowrite.project.common.constants.OrganizationConstants.ROLE_OWNER;
 import static com.cowrite.project.common.constants.UserEventConstants.*;
 
 
@@ -25,13 +30,16 @@ public class UserSignalEventHandler {
 
     private final OrganizationService organizationService;
 
+    private final OrganizationMemberService organizationMemberService;
+
     private final Signals signals;
 
     private static final Logger log = LoggerFactory.getLogger(UserSignalEventHandler.class);
 
-    public UserSignalEventHandler(EmailService emailService, OrganizationService organizationService, Signals signals) {
+    public UserSignalEventHandler(EmailService emailService, OrganizationService organizationService, OrganizationMemberService organizationMemberService, Signals signals) {
         this.emailService = emailService;
         this.organizationService = organizationService;
+        this.organizationMemberService = organizationMemberService;
         this.signals = signals;
     }
 
@@ -81,6 +89,16 @@ public class UserSignalEventHandler {
                     .build();
 
             organizationService.save(org);
+
+            OrganizationMember organizationMember = OrganizationMember.builder()
+                    .role(ROLE_OWNER)
+                    .organizationId(org.getId())
+                    .userId(user.getId())
+                    .status(ORG_STATUS_ACTIVE)
+                    .joinedAt(LocalDateTime.now())
+                    .build();
+
+            organizationMemberService.save(organizationMember);
             log.info("user: {} init organization successful", user.getUsername());
         } catch (Exception e) {
             log.error("user: {} init organization failed: {}", user.getUsername(), e.getMessage(), e);
