@@ -70,6 +70,34 @@ public class CosStorageService implements FileStorageAdapter {
         }
     }
 
+    @Override
+    public String upload(String prefix, MultipartFile file) {
+        COSClient cosClient = null;
+        try {
+            cosClient = buildClient();
+            String filename = System.currentTimeMillis() + "_" + prefix + "/" + file.getOriginalFilename();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentLength(file.getSize());
+            metadata.setContentType(file.getContentType());
+
+            PutObjectRequest request = new PutObjectRequest(
+                    properties.getCosBucket(), filename, file.getInputStream(), metadata);
+            request.setCannedAcl(CannedAccessControlList.PublicRead);
+
+            cosClient.putObject(request);
+
+            return filename; // 或拼接返回完整 URL
+
+        } catch (Exception e) {
+            throw new RuntimeException("COS 上传失败", e);
+        } finally {
+            if (cosClient != null) {
+                cosClient.shutdown();
+            }
+        }
+    }
+
     /**
      * 下载文件
      */

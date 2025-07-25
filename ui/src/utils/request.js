@@ -71,11 +71,24 @@ instance.interceptors.response.use(
     error => {
         if (error.response) {
             const status = error.response.status;
-            if (status === 404) {
+            if (status === 401) {
+                // 401: 未授权，令牌过期或无效
+                notify.error('令牌无效或已过期，请重新登录');
+                // 清除 token，并且跳转到登录页面
+                localStorage.removeItem('token');
+                // 根据需要，你可以使用以下代码进行重定向到登录页面（例如使用 react-router）
+                window.location.href = '/login'; // 假设你有一个 /login 路由
+            } else if (status === 403) {
+                // 403: 禁止访问
+                notify.error('您没有权限访问此资源');
+            } else if (status === 404) {
+                // 404: 资源未找到
                 notify.error('请求的资源未找到');
             } else if (status === 500) {
+                // 500: 服务器错误
                 notify.error('服务器内部错误，请稍后再试');
             } else {
+                // 其他错误
                 notify.error('请求失败，请重试');
             }
         } else {

@@ -10,7 +10,14 @@ router.get('/', async (req, res) => {
         res.status(200).json(result);
     } catch (error) {
         console.error('Error in GET /notification:', error.message);
-        res.status(500).json({ message: 'Error fetching notifications' });
+
+        // 处理未授权错误
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: '未授权：令牌无效或已过期' });
+        }
+
+        // 处理其他错误
+        res.status(500).json({ message: '获取通知列表时出错' });
     }
 });
 
@@ -22,7 +29,14 @@ router.get('/unread-count', async (req, res) => {
         res.status(200).json(result);
     } catch (error) {
         console.error('Error in GET /notification/unread-count:', error.message);
-        res.status(500).json({ message: 'Error fetching unread count' });
+
+        // 处理未授权错误
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: '未授权：令牌无效或已过期' });
+        }
+
+        // 处理其他错误
+        res.status(500).json({ message: '获取未读数量时出错' });
     }
 });
 
@@ -32,10 +46,17 @@ router.post('/:id/read', async (req, res) => {
     const token = req.headers['authorization'];
     try {
         await markNotificationAsRead(id, token);
-        res.status(200).json({ message: 'Marked as read' });
+        res.status(200).json({ message: '标记为已读' });
     } catch (error) {
         console.error(`Error marking notification ${id} as read:`, error.message);
-        res.status(500).json({ message: 'Error marking as read' });
+
+        // 处理未授权错误
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: '未授权：令牌无效或已过期' });
+        }
+
+        // 处理其他错误
+        res.status(500).json({ message: '标记通知为已读时出错' });
     }
 });
 
@@ -44,10 +65,17 @@ router.post('/readAll', async (req, res) => {
     const token = req.headers['authorization'];
     try {
         await markAllNotificationsAsRead(token);
-        res.status(200).json({ message: 'All marked as read' });
+        res.status(200).json({ message: '所有通知标记为已读' });
     } catch (error) {
         console.error('Error marking all as read:', error.message);
-        res.status(500).json({ message: 'Error marking all as read' });
+
+        // 处理未授权错误
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: '未授权：令牌无效或已过期' });
+        }
+
+        // 处理其他错误
+        res.status(500).json({ message: '标记所有通知为已读时出错' });
     }
 });
 
@@ -57,10 +85,17 @@ router.delete('/:id', async (req, res) => {
     const token = req.headers['authorization'];
     try {
         await deleteNotification(id, token);
-        res.status(200).json({ message: 'Notification deleted' });
+        res.status(200).json({ message: '通知已删除' });
     } catch (error) {
         console.error(`Error deleting notification ${id}:`, error.message);
-        res.status(500).json({ message: 'Error deleting notification' });
+
+        // 处理未授权错误
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: '未授权：令牌无效或已过期' });
+        }
+
+        // 处理其他错误
+        res.status(500).json({ message: '删除通知时出错' });
     }
 });
 
@@ -69,10 +104,17 @@ router.delete('/clear', async (req, res) => {
     const token = req.headers['authorization'];
     try {
         await clearAllNotifications(token);
-        res.status(200).json({ message: 'All notifications cleared' });
+        res.status(200).json({ message: '所有通知已清空' });
     } catch (error) {
         console.error('Error clearing notifications:', error.message);
-        res.status(500).json({ message: 'Error clearing notifications' });
+
+        // 处理未授权错误
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: '未授权：令牌无效或已过期' });
+        }
+
+        // 处理其他错误
+        res.status(500).json({ message: '清空通知时出错' });
     }
 });
 

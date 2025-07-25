@@ -305,3 +305,23 @@ CREATE TABLE `hib_webhook`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='Webhook 配置表';
+
+# Plugins
+CREATE TABLE `hib_plugins`
+(
+    `id`              BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    `plugin_name`     VARCHAR(255) NOT NULL COMMENT '插件名称',
+    `plugin_type`     VARCHAR(100) NOT NULL COMMENT '插件类型（如：文本生成、图像识别等）',
+    `description`     TEXT COMMENT '插件描述',
+    `version`         VARCHAR(50) NOT NULL COMMENT '插件版本',
+    `webhook_url`      VARCHAR(255) COMMENT '插件的 Webhook 回调地址',
+    `api_url`         VARCHAR(255) COMMENT '插件API地址',
+    `documentation_url` VARCHAR(255) COMMENT '插件文档地址',
+    `author`          VARCHAR(255) COMMENT '插件作者',
+    `enabled`          BOOLEAN DEFAULT TRUE COMMENT '插件是否启用',
+    `created_at`      DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`      DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted`         TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT = '插件库表';

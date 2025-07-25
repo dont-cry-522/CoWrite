@@ -10,11 +10,10 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-
-@Component
 /**
  * Session管理器
  */
+@Component
 public class SessionManager {
 
     //绑定channel和user

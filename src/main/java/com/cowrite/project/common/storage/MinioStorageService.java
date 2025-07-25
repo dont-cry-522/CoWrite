@@ -57,6 +57,26 @@ public class MinioStorageService implements FileStorageAdapter {
         }
     }
 
+    @Override
+    public String upload(String prefix, MultipartFile file) {
+        try {
+            String filename = System.currentTimeMillis() + "_" + prefix + "/" + file.getOriginalFilename();
+            InputStream inputStream = file.getInputStream();
+
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(properties.getMinioBucket())
+                            .object(filename)
+                            .stream(inputStream, file.getSize(), -1)
+                            .contentType(file.getContentType())
+                            .build()
+            );
+            return properties.getMinioEndpoint() + '/' + properties.getMinioBucket() + '/' + filename;
+        } catch (Exception e) {
+            throw new BusinessException(SYSTEM_ERROR.code(), "MinIO上传失败"+ e);
+        }
+    }
+
     /**
      * 下载文件
      */

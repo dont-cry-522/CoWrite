@@ -12,6 +12,15 @@ router.get('/send-code/:email', async (req, res) => {
         res.status(200).json(result);  // 转发结果
     } catch (error) {
         console.error('Error in /send-code:', error.message);
+
+        // Check if it's an Unauthorized or Forbidden error
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid token or session expired' });
+        }
+        if (error.response && error.response.status === 403) {
+            return res.status(403).json({ message: 'Forbidden: Access denied' });
+        }
+
         res.status(500).json({ message: 'Error sending verification code' });
     }
 });
@@ -24,6 +33,12 @@ router.post('/register/email', async (req, res) => {
         res.status(201).json(result);  // 转发注册结果
     } catch (error) {
         console.error('Error in /register/email:', error.message);
+
+        // Handle specific error codes
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid code or session expired' });
+        }
+
         res.status(500).json({ message: 'Error registering user by email' });
     }
 });
@@ -35,6 +50,12 @@ router.get('/info', async (req, res) => {
         res.status(200).json(result);  // 转发用户信息
     } catch (error) {
         console.error('Error in /info:', error.message);
+
+        // Handle specific error codes
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: 'Unauthorized: Token expired or invalid' });
+        }
+
         res.status(500).json({ message: 'Error fetching user info by token' });
     }
 });
@@ -47,6 +68,12 @@ router.post('/login/email', async (req, res) => {
         res.status(200).json(result);  // 转发登录结果（如 token）
     } catch (error) {
         console.error('Error in /login/email:', error.message);
+
+        // Handle specific error codes
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid email or code' });
+        }
+
         res.status(500).json({ message: 'Error logging in user by email' });
     }
 });
@@ -58,6 +85,12 @@ router.post('/logout', async (req, res) => {
         res.status(200).json(result);  // 转发退出结果
     } catch (error) {
         console.error('Error in /logout:', error.message);
+
+        // Handle specific error codes
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid session' });
+        }
+
         res.status(500).json({ message: 'Error logging out user' });
     }
 });
@@ -75,6 +108,12 @@ router.put('/update', async (req, res) => {
         res.status(200).json(result);  // 转发更新结果
     } catch (error) {
         console.error('Error in /update:', error.message);
+
+        // Handle specific error codes
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid token or expired session' });
+        }
+
         res.status(500).json({ message: 'Error updating user info' });
     }
 });
@@ -86,13 +125,17 @@ router.post('/delete-account', async (req, res) => {
         res.status(200).json(result);  // 转发注销结果
     } catch (error) {
         console.error('Error in /delete-account:', error.message);
+
+        // Handle specific error codes
+        if (error.response && error.response.status === 401) {
+            return res.status(401).json({ message: 'Unauthorized: Invalid token or expired session' });
+        }
+
         res.status(500).json({ message: 'Error deleting account' });
     }
 });
 
 module.exports = router;
-
-
 
 const axios = require('axios');
 

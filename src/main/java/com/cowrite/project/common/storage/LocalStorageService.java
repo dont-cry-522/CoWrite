@@ -41,6 +41,20 @@ public class LocalStorageService implements FileStorageAdapter {
         }
     }
 
+    @Override
+    public String upload(String prefix, MultipartFile file) {
+
+        try {
+            String filename = System.currentTimeMillis() + "_" + prefix + "/" + file.getOriginalFilename();
+            Path path = Paths.get(properties.getLocalBasePath(), filename);
+            Files.createDirectories(path.getParent());
+            file.transferTo(path.toFile());
+            return filename;
+        } catch (IOException e) {
+            throw new RuntimeException("本地文件上传失败", e);
+        }
+    }
+
     /**
      * 下载文件
      */

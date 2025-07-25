@@ -13,6 +13,11 @@ public interface FileStorageAdapter {
     String upload(MultipartFile file);
 
     /**
+     * 上传文件
+     */
+    String upload(String prefix, MultipartFile file);
+
+    /**
      * 下载文件
      */
     byte[] download(String path);
