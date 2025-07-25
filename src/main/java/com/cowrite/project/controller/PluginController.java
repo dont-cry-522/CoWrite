@@ -39,36 +39,6 @@ public class PluginController {
     }
 
     /**
-     * 新增 Plugin 记录
-     * @param entity 实体对象
-     * @return 是否新增成功
-     */
-    @PostMapping
-    public ApiResponse<Boolean> add(@RequestBody Plugin entity) {
-        return ApiResponse.success(pluginService.save(entity));
-    }
-
-    /**
-     * 更新 Plugin 记录
-     * @param entity 实体对象（必须包含主键 ID）
-     * @return 是否更新成功
-     */
-    @PutMapping
-    public ApiResponse<Boolean> update(@RequestBody Plugin entity) {
-        return ApiResponse.success(pluginService.updateById(entity));
-    }
-
-    /**
-     * 删除指定 ID 的 Plugin 记录
-     * @param id 主键 ID
-     * @return 是否删除成功
-     */
-    @DeleteMapping("/{id}")
-    public ApiResponse<Boolean> delete(@PathVariable("id") Integer id) {
-        return ApiResponse.success(pluginService.removeById(id));
-    }
-
-    /**
      * 根据 ID 获取 Plugin 详情
      * @param id 主键 ID
      * @return 匹配的实体对象
@@ -76,15 +46,6 @@ public class PluginController {
     @GetMapping("/{id}")
     public ApiResponse<Plugin> getById(@PathVariable("id") Integer id) {
         return ApiResponse.success(pluginService.getById(id));
-    }
-
-    /**
-     * 获取所有 Plugin 列表（不分页）
-     * @return 实体列表
-     */
-    @GetMapping
-    public ApiResponse<List<Plugin>> list() {
-        return ApiResponse.success(pluginService.list());
     }
 
     /**
@@ -99,7 +60,7 @@ public class PluginController {
         QueryWrapper<Plugin> wrapper = new QueryWrapper<>();
 
         if (pageRequest.getKeyword() != null && !pageRequest.getKeyword().isEmpty()) {
-            wrapper.like("name", pageRequest.getKeyword()); // 可自定义字段
+            wrapper.like("pluginName", pageRequest.getKeyword()); // 可自定义字段
         }
 
         if (pageRequest.getSortBy() != null && !pageRequest.getSortBy().isEmpty()) {

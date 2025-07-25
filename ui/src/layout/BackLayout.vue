@@ -5,10 +5,8 @@ import Header from '../components/Header.vue'; // 头部组件
 import {
   HomeIcon,
   SettingsIcon,
-  UsersIcon,
   BarChartIcon,
   BotIcon,
-  SlidersHorizontalIcon,
   UserCircleIcon,
   BellIcon,
   FileTextIcon,
@@ -83,14 +81,8 @@ const menuItems = [
 
 .main-content .content-area {
   flex: 1;
-  padding: 20px;
   background-color: #f8fafc;
   overflow-y: auto;
-}
-
-/* 当侧边栏折叠时调整内容区的样式 */
-.main-content .content-area {
-  padding-left: 24px; /* 调整内容区域的左侧间距 */
 }
 
 #back-layout .layout-container {

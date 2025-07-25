@@ -31,6 +31,11 @@ server:
     context-path:
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
   profiles:
     active:
   datasource:

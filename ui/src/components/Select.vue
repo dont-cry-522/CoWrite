@@ -94,13 +94,13 @@ function select(value: string | number) {
 .select-dropdown {
   position: absolute;
   z-index: 10;
-  top: calc(100% + 4px);
+  top: calc(50% + 2px);
   left: 0;
   right: 0;
   background: white;
   border: 1px solid #ccc;
   border-radius: 0.75rem;
-  padding: 0.5rem;
+  padding: 0.3rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 

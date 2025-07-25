@@ -19,6 +19,7 @@ declare module 'vue' {
     IconMdiFileDocumentOutline: typeof import('~icons/mdi/file-document-outline')['default']
     IconMdiFolderOutline: typeof import('~icons/mdi/folder-outline')['default']
     IconMdiHome: typeof import('~icons/mdi/home')['default']
+    Input: typeof import('./src/components/Input.vue')['default']
     Layout: typeof import('./src/layout/Layout.vue')['default']
     LeftSidebar: typeof import('./src/components/LeftSidebar.vue')['default']
     MarkdownEditor: typeof import('./src/components/MarkdownEditor.vue')['default']

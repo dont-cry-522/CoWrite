@@ -165,41 +165,45 @@ const pages = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
 }
 
 .pagination {
   display: flex;
   justify-content: center;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 6px;
 }
 
 .pagination-controls {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 14px;
   flex-wrap: wrap;
+  font-size: 14px;
 }
 
 .pagination-total {
   color: #666;
+  font-size: 14px;
 }
 
 .pagination-button {
-  padding: 6px 12px;
+  padding: 8px 16px;
   font-size: 14px;
-  border: none;
-  border-radius: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  background-color: transparent;
+  background-color: #fff;
   color: #333;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .pagination-button:hover:not(:disabled) {
   background-color: #e2e8f0;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .pagination-button:disabled {
@@ -210,31 +214,37 @@ const pages = computed(() => {
 .pagination-button.active {
   background-color: #06b6d4;
   color: white;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
 .pagination-ellipsis {
-  padding: 6px 8px;
+  padding: 8px;
   font-size: 14px;
   color: #999;
 }
 
 select,
 input[type='number'] {
-  padding: 3px 6px;
-  border-radius: 4px;
+  padding: 6px 10px;
+  border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 14px;
-  width: 60px;
+  width: 70px;
+}
+
+input[type='number'] {
+  max-width: 70px;
 }
 
 @media (prefers-color-scheme: dark) {
   .pagination-button {
     color: #ccc;
+    background-color: #333;
+    border-color: #444;
   }
 
   .pagination-button:hover:not(:disabled) {
-    background-color: #374151;
+    background-color: #444;
   }
 
   .pagination-button.active {
@@ -248,9 +258,9 @@ input[type='number'] {
 
   select,
   input[type='number'] {
-    background-color: #1e1e1e;
+    background-color: #2c2c2c;
     color: #ddd;
-    border-color: #444;
+    border-color: #555;
   }
 }
 </style>
