@@ -15,7 +15,6 @@ cowrite:
   #对象存储
   storage:
 
-
   invite:
     base-url: http://localhost:8080/api/org_invite/link/
     font-url: http://localhost:3000/invite

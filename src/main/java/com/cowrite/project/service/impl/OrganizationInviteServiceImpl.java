@@ -60,7 +60,7 @@ public class OrganizationInviteServiceImpl extends ServiceImpl<OrganizationInvit
         // 生成短码
         String shortCode = CodeUtil.encode(invite.getId());
         invite.setInviteCode(shortCode);
-        updateById(invite); // 保存邀请码字段
+        this.updateById(invite); // 保存邀请码字段
 
         String baseUrl = serverConfig.getInviteBaseUrl();
         String fullUrl = baseUrl + "/" + invite.getInviteCode();
