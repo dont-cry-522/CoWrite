@@ -15,6 +15,7 @@
         <result column="email_notifications" property="emailNotifications" />
         <result column="language" property="language" />
         <result column="bio" property="bio" />
+        <result column="current_organization_id" property="currentOrganizationId"/>
         <result column="created_at" property="createdAt" />
         <result column="updated_at" property="updatedAt" />
         <result column="deleted" property="deleted"/>
@@ -30,6 +31,7 @@
             `theme_dark`,
             `email_notifications`,
             `language`,
+            `current_organization_id`,
             `bio`,
             `created_at`,
             `updated_at`,

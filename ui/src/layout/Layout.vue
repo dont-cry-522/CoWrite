@@ -8,6 +8,8 @@
           :collapsed="isLeftCollapsed"
           @toggle="isLeftCollapsed = !isLeftCollapsed"
           @select="selectRepository"
+          @menuClick="onMenuClick"
+          @repoClick="onRepoSelect"
       />
 
       <!-- 主内容区域 -->
@@ -17,6 +19,7 @@
 
       <!-- 右侧 -->
       <RightSidebar
+          v-if="!isHideRightSidebar"
           :collapsed="isRightCollapsed"
           :currentRepo="selectedRepo"
           :catalog="docCatalog"
@@ -30,9 +33,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 import RightSidebar from '../components/RightSidebar.vue';
 import LeftSidebar from "../components/LeftSidebar.vue";
 const isRightCollapsed = ref(false)
+const isHideRightSidebar = ref(false);
 const selectedRepo = ref({ id: 1, name: '知识库 1' })
 const docCatalog = ref([
   {
@@ -50,6 +56,31 @@ const docCatalog = ref([
   },
 ])
 
+function onMenuClick(item: any) {
+  isHideRightSidebar.value = true;
+  router.push(`/${item.id}`)
+}
+
+function onRepoSelect(repo: any) {
+  isHideRightSidebar.value = false;
+  selectedRepo.value = repo
+  // docCatalog.value = getDocsByRepoId(repo.id)
+  docCatalog.value = [
+    {
+      id: 'home',
+      title: '更换后首页',
+      icon: 'home',
+    },
+    {
+      id: 'dir1',
+      title: '更换后',
+      children: [
+        { id: 'doc1', title: '接口文档.md' },
+        { id: 'doc2', title: '产品需求文档.md' },
+      ],
+    },
+  ]
+}
 
 interface Repository {
   id: number;

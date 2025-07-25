@@ -117,4 +117,19 @@ public class OperationLog extends BaseEntity implements Serializable {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "OperationLog{" +
+                "id=" + id +
+                ", type=" + type +
+                ", description='" + description + '\'' +
+                ", operator='" + operator + '\'' +
+                ", userId=" + userId +
+                ", success=" + success +
+                ", params='" + params + '\'' +
+                ", result='" + result + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

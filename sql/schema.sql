@@ -14,6 +14,7 @@ CREATE TABLE `hib_user`
     `theme_dark`          TINYINT(1)  DEFAULT 0 COMMENT '深色模式（0 - 浅色，1 - 深色）',
     `email_notifications` TINYINT(1)  DEFAULT 1 COMMENT '邮件通知（0 - 关闭，1 - 开启）',
     `language`            VARCHAR(50) DEFAULT 'EN' COMMENT '用户语言 (EN / ZH)',
+    `current_organization_id` BIGINT DEFAULT NULL COMMENT '当前选中的组织 ID',
     `bio`                 TEXT COMMENT '用户简介' COMMENT '用户简介',
     `created_at`          DATETIME    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at`          DATETIME    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -238,7 +239,7 @@ CREATE TABLE `hib_tag`
     `deleted`    TINYINT(1)  DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='标签表';
+COLLATE = utf8mb4_unicode_ci COMMENT ='标签表';
 
 # Document Tag
 CREATE TABLE `hib_entity_tag` (

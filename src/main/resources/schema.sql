@@ -9,6 +9,7 @@ CREATE TABLE hib_user
     theme_dark          INT  DEFAULT 0,
     email_notifications INT  DEFAULT 1,
     language            VARCHAR(50) DEFAULT 'EN',
+    current_organization_id BIGINT DEFAULT 0,
     bio                 TEXT,
     created_at          TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
     updated_at          TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ,

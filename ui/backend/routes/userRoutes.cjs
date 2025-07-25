@@ -41,9 +41,9 @@ router.get('/info', async (req, res) => {
 
 // 邮箱登录
 router.post('/login/email', async (req, res) => {
-    const { email, password } = req.body;
+    const { email, code } = req.body;
     try {
-        const result = await loginUserByEmail({ email, password });
+        const result = await loginUserByEmail({ email, code });
         res.status(200).json(result);  // 转发登录结果（如 token）
     } catch (error) {
         console.error('Error in /login/email:', error.message);

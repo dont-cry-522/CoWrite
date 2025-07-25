@@ -34,6 +34,8 @@ public enum LogType {
 
     API_CALL("接口调用"),
 
+    ORG_MODULE("组织接口调用"),
+
     TASK_EXECUTION("任务执行"),
 
     THIRD_PARTY("第三方服务"),
