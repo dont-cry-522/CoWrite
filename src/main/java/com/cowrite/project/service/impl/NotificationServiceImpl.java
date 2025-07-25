@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cowrite.project.common.anno.Loggable;
+import com.cowrite.project.common.enums.LogType;
 import com.cowrite.project.common.enums.NotificationType;
 import com.cowrite.project.mapper.NotificationMapper;
 import com.cowrite.project.model.entity.Notification;
@@ -31,6 +33,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * 发送通知
      */
     @Override
+    @Loggable(type = LogType.SYSTEM_MESSAGE, value = "发送通知")
     public void sendNotification(Notification notification) {
         notificationMapper.insert(notification);
     }
@@ -39,6 +42,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * 获取当前用户通知列表
      */
     @Override
+    @Loggable(type = LogType.SYSTEM_MESSAGE, value = "获取当前用户通知列表")
     public IPage<Notification> getNotificationsByUserIdPaged(Long userId, int page, int size, NotificationType type) {
         QueryWrapper<Notification> query = new QueryWrapper<Notification>()
                 .eq("user_id", userId)
@@ -53,6 +57,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * 获取当前用户未读通知数量
      */
     @Override
+    @Loggable(type = LogType.SYSTEM_MESSAGE, value = "获取当前用户未读通知数量")
     public long countUnreadByUserId(Long userId) {
         return count(new QueryWrapper<Notification>()
                 .eq("user_id", userId)
@@ -64,6 +69,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * 标记单条通知为已读
      */
     @Override
+    @Loggable(type = LogType.SYSTEM_MESSAGE, value = "标记单条通知为已读")
     public void markAsRead(Long userId, Long notificationId) {
         Notification notification = getOne(new QueryWrapper<Notification>()
                 .eq("id", notificationId)
@@ -81,6 +87,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * 将所有通知标记为已读
      */
     @Override
+    @Loggable(type = LogType.SYSTEM_MESSAGE, value = "将所有通知标记为已读")
     public void markAllAsRead(Long userId) {
         List<Notification> unreadList = list(new QueryWrapper<Notification>()
                 .eq("user_id", userId)
@@ -91,7 +98,6 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             notification.setRead(true);
             notification.setReadTime(LocalDateTime.now());
         }
-
         updateBatchById(unreadList);
     }
 
@@ -99,6 +105,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * 删除单条通知
      */
     @Override
+    @Loggable(type = LogType.SYSTEM_MESSAGE, value = "删除单条通知")
     public void deleteByUserAndId(Long userId, Long notificationId) {
         remove(new QueryWrapper<Notification>()
                 .eq("id", notificationId)
@@ -110,6 +117,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
      * 清空所有通知
      */
     @Override
+    @Loggable(type = LogType.SYSTEM_MESSAGE, value = "获取当前用户通知列表")
     public void clearAllByUserId(Long userId) {
         remove(new QueryWrapper<Notification>()
                 .eq("user_id", userId)

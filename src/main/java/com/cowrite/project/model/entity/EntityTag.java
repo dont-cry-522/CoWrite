@@ -12,8 +12,8 @@ import java.io.Serializable;
  * DocumentTag 实体类
  * @author Hibiscus-code-generate
  */
-@TableName("hib_document_tag")
-public class DocumentTag extends BaseEntity implements Serializable {
+@TableName("hib_entity_tag")
+public class EntityTag extends BaseEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -23,11 +23,15 @@ public class DocumentTag extends BaseEntity implements Serializable {
     */
     @TableId
     private Long id;
-
     /**
-    * 文档ID
+     * 实体类型
+     */
+    @TableField("entity_type")
+    private Long entityType;
+    /**
+    * 实体ID
     */
-    @TableField("document_id")
+    @TableField("entity_id")
     private Long documentId;
 
     /**
@@ -57,5 +61,13 @@ public class DocumentTag extends BaseEntity implements Serializable {
 
     public void setTagId(Long tagId) {
     this.tagId = tagId;
+    }
+
+    public Long getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(Long entityType) {
+        this.entityType = entityType;
     }
 }

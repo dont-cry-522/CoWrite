@@ -1,7 +1,9 @@
 package com.cowrite.project.config;
 
+import com.cowrite.project.interceptor.UserInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -14,6 +16,23 @@ import springfox.documentation.spring.web.plugins.Docket;
 
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
+
+    private final UserInterceptor userInterceptor;
+
+    public WebConfig(UserInterceptor userInterceptor) {
+        this.userInterceptor = userInterceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(userInterceptor)
+                .addPathPatterns("/api/users/upload-avatar","/api/users/update")
+                .addPathPatterns("/api/notification/**")
+                .addPathPatterns("/api/operator/**")
+                .addPathPatterns("/api/organization/organized","/api/organization/switch","/api/organization/{organizationId}/member/{userId}",
+                                 "/api/organization/{organizationId}/member/{userId}/role","/api/organization/{organizationId}/members");
+    }
+
     @Bean
     public Docket docket() {
         ApiInfo apiInfo = new ApiInfoBuilder()
@@ -21,7 +40,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
                 .description("CoWrite Backend")  // 描述
                 .version("1.0.0")  // 版本号
                 .termsOfServiceUrl("https://www.hibiscus.fit")  // 服务条款 URL
-                .contact(new Contact("CodeForge 开发团队", "https://www.hibiscus.fit", "heathcetide@zoho.com"))  // 联系信息
+                .contact(new Contact("CoWrite 开发团队", "https://www.hibiscus.fit", "heathcetide@zoho.com"))  // 联系信息
                 .license("Apache 2.0")  // 许可证
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0.html")  // 许可证 URL
                 .build();

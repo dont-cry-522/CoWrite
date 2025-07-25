@@ -4,7 +4,7 @@
 
 <mapper namespace="com.cowrite.project.mapper.DocumentTagMapper">
 
-    <resultMap id="BaseResultMap" type="com.cowrite.project.model.entity.DocumentTag">
+    <resultMap id="BaseResultMap" type="com.cowrite.project.model.entity.EntityTag">
         <id column="id" property="id" />
         <result column="document_id" property="documentId" />
         <result column="tag_id" property="tagId" />

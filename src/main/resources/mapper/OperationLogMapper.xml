@@ -20,14 +20,6 @@
         SELECT * FROM hib_operation_log WHERE id = #{id}
     </select>
 
-    <insert id="insert" parameterType="com.cowrite.project.model.entity.OperationLog">
-        INSERT INTO hib_operation_log (
-            type, description, operator, success, params, result, timestamp
-        ) VALUES (
-                     #{type}, #{description}, #{operator}, #{success}, #{params}, #{result}, #{timestamp}
-                 )
-    </insert>
-
     <delete id="deleteById" parameterType="java.lang.Long">
         DELETE FROM hib_operation_log WHERE id = #{id}
     </delete>

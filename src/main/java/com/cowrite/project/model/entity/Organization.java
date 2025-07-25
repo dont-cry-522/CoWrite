@@ -141,4 +141,56 @@ public class Organization extends BaseEntity implements Serializable {
                 ", currentMembers=" + currentMembers +
                 '}';
     }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final Organization organization = new Organization();
+
+        public Builder id(Long id) {
+            organization.setId(id);
+            return this;
+        }
+
+        public Builder name(String name) {
+            organization.setName(name);
+            return this;
+        }
+
+        public Builder description(String description) {
+            organization.setDescription(description);
+            return this;
+        }
+
+        public Builder ownerId(Long ownerId) {
+            organization.setOwnerId(ownerId);
+            return this;
+        }
+
+        public Builder status(String status) {
+            organization.setStatus(status);
+            return this;
+        }
+
+        public Builder published(String published) {
+            organization.setPublished(published);
+            return this;
+        }
+
+        public Builder maxMembers(Integer maxMembers) {
+            organization.setMaxMembers(maxMembers);
+            return this;
+        }
+
+        public Builder currentMembers(Long currentMembers) {
+            organization.setCurrentMembers(currentMembers);
+            return this;
+        }
+
+        public Organization build() {
+            return organization;
+        }
+    }
 }

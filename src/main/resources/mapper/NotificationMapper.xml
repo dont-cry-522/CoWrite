@@ -28,20 +28,4 @@
         send_time, read_time, deleted, created_at, updated_at
     </sql>
 
-    <insert id="insert" useGeneratedKeys="false">
-        INSERT INTO hib_notification (
-            id, user_id, type, title, content, level, is_read,
-            business_id, business_type, extra_data,
-            send_time, read_time, deleted, created_at, updated_at
-        ) VALUES (
-                     #{id}, #{userId}, #{type}, #{title}, #{content}, #{level}, #{read},
-                     #{businessId}, #{businessType}, #{extraData},
-                     #{sendTime}, #{readTime}, #{deleted}, #{createdAt}, #{updatedAt}
-                 )
-    </insert>
-
-    <delete id="deleteById">
-        UPDATE hib_notification SET deleted = 1 WHERE id = #{id}
-    </delete>
-
 </mapper>

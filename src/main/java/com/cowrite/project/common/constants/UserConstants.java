@@ -1,5 +1,9 @@
 package com.cowrite.project.common.constants;
 
+import com.cowrite.project.model.entity.User;
+
+import java.util.UUID;
+
 /**
  * 用户常量
  *
@@ -63,6 +67,8 @@ public interface UserConstants {
 
     String EMPTY_PASSWORD_HASH = "moxie";
 
+    String NEW_USER_NICKNAME = "Cow-" + UUID.randomUUID().toString().replace("-", "").substring(22);
+
     String DEFAULT_USER = "https://cetide-1325039295.cos.ap-chengdu.myqcloud.com/west/default_user.png";
 
     String USER_LANGUAGE_DEFAULT = "zh-CN";
@@ -72,4 +78,21 @@ public interface UserConstants {
     Boolean USER_THEME_DARK_DEFAULT = false;
 
     String USER_BIO_DEFAULT = "此用户很懒, 什么也没有留下.....";
+
+    /**
+     * 构建新用户
+     */
+    static User BuildNewUser(String email) {
+        User user = new User();
+        user.setUsername(NEW_USER_NICKNAME);
+        user.setEmail(email);
+        user.setPassword(NEW_USER_PASSWORD + EMPTY_PASSWORD_HASH);
+        user.setAvatarUrl(DEFAULT_USER);
+        user.setStatus(USER_STATUS_ACTIVE);
+        user.setThemeDark(USER_THEME_DARK_DEFAULT);
+        user.setEmailNotifications(USER_NOTIFICATIONS_DEFAULT);
+        user.setLanguage(USER_LANGUAGE_DEFAULT);
+        user.setBio(USER_BIO_DEFAULT);
+        return user;
+    }
 }

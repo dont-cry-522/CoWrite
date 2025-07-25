@@ -14,20 +14,21 @@ import {
   FileTextIcon,
   ShieldIcon,
 } from 'lucide-vue-next';
+import { useAuth } from '../composables/useAuth'
 
+const { getUserInfo } = useAuth()
+const userInfo = getUserInfo
 const collapsed = ref(false);
 
 const menuItems = [
-  { label: '数据统计', icon: BarChartIcon, path: '/stats' },
-  { label: '首页', icon: HomeIcon, path: '/' },
-  { label: 'AI 插件', icon: BotIcon, path: '/ai-plugins' },
-  { label: '偏好设置', icon: SlidersHorizontalIcon, path: '/preferences' },
-  { label: '个人中心', icon: UserCircleIcon, path: '/profile' },
-  { label: '消息设置', icon: BellIcon, path: '/notifications' },
-  { label: '个人日志', icon: FileTextIcon, path: '/logs' },
-  { label: '账号管理', icon: ShieldIcon, path: '/account' },
-  { label: '设置', icon: SettingsIcon, path: '/settings' },
-  { label: '用户', icon: UsersIcon, path: '/users' },
+  { label: '首页', icon: HomeIcon, path: '/back/' },
+  { label: 'AI 插件', icon: BotIcon, path: '/back/ai-plugins' },
+  { label: '个人中心', icon: UserCircleIcon, path: '/back/profile' },
+  { label: '我的消息', icon: BellIcon, path: '/back/notifications' },
+  { label: '个人日志', icon: FileTextIcon, path: '/back/logs' },
+  { label: '账号管理', icon: ShieldIcon, path: '/back/account' },
+  { label: '设置', icon: SettingsIcon, path: '/back/settings' },
+  { label: '数据统计', icon: BarChartIcon, path: '/back/stats' },
 ];
 
 </script>
@@ -41,6 +42,9 @@ const menuItems = [
           logoText="我的应用"
           :menuItems="menuItems"
           v-model:collapsed="collapsed"
+          :userName="userInfo?.username"
+          :userAvatar="userInfo?.avatarUrl"
+          :userBio="userInfo?.bio"
       />
 
       <!-- 内容区域 -->

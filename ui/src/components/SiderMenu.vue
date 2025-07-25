@@ -110,7 +110,7 @@ const route = useRoute()
 const collapsed = ref(false)
 
 function isActive(path: string) {
-  return route.path.startsWith(path)
+  return route.path.startsWith(path) || route.name === path
 }
 
 function navigate(path: string) {
