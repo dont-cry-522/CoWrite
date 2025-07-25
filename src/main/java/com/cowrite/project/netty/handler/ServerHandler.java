@@ -7,6 +7,8 @@ import com.cowrite.project.netty.session.SessionManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<TextWebSocketFram
     private SessionManager sessionManager;
 
     private HashMap<String,ArrayList<NettyMessage>> operationHistory = new HashMap<>();
+
+    // 心跳超时时间（单位：秒）
+    private static final int READ_IDLE_TIMEOUT = 300;
 
 
     @Override
@@ -91,6 +96,21 @@ public class ServerHandler extends SimpleChannelInboundHandler<TextWebSocketFram
                 String currentContent = contentHandler.applyOperations(docId,newHistory);
                 newHistory.clear();
             }
+        }
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent event = (IdleStateEvent) evt;
+
+            if (event.state() == IdleState.READER_IDLE) {
+                log.warn("客户端 [{}] 已超过 {} 秒未发送消息，关闭连接", ctx.channel().remoteAddress(), READ_IDLE_TIMEOUT);
+                ctx.close(); // 关闭空闲连接
+            }
+
+        } else {
+            super.userEventTriggered(ctx, evt);
         }
     }
 

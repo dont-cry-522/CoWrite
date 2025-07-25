@@ -23,7 +23,7 @@ public class ContentHandler {
 
     public String applyOperations(String docId,List<NettyMessage> operations) {
         //从mongodb中查找内容
-        String content = "";
+        String content = "1111111";
         StringBuilder newContent = new StringBuilder(content);
 
             for (NettyMessage msg : operations) {
