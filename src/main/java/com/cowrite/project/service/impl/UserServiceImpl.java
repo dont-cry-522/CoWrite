@@ -4,7 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cowrite.project.common.anno.Loggable;
 import com.cowrite.project.common.context.AuthContext;
+import com.cowrite.project.common.enums.LogType;
 import com.cowrite.project.common.storage.FileStorageAdapter;
 import com.cowrite.project.exception.BusinessException;
 import com.cowrite.project.mapper.UserMapper;
@@ -175,6 +177,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     @Transactional
+    @Loggable(type = LogType.USER_UPDATE, value = "用户修改信息")
     public String updateUserInfo(User user) {
         if (user == null) {
             throw new IllegalArgumentException("error.username.empty");
@@ -225,6 +228,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 用户退出登录
      */
     @Override
+    @Loggable(type = LogType.USER_LOGOUT, value = "用户退出登录")
     public void logoutUser(String currentToken) {
         redisUtils.delete(TOKEN_CACHE_KEY + jwtUtils.getUserFromToken(currentToken).getId());
     }
@@ -233,6 +237,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 上传用户头像
      */
     @Override
+    @Loggable(type = LogType.USER_UPDATE, value = "上传头像")
     public String uploadAvatar(MultipartFile file) {
         String upload = fileStorageAdapter.upload(file);
         User user = userMapper.selectById(AuthContext.getCurrentUser().getId());
@@ -254,6 +259,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     @Transactional
+    @Loggable(type = LogType.USER_DELETE, value = "注销用户")
     public void requestAccountDeletion() {
         User user = userMapper.selectById(AuthContext.getCurrentUser().getId());
         if (user == null) {

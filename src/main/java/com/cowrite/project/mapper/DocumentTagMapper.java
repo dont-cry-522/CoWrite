@@ -1,7 +1,7 @@
 package com.cowrite.project.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cowrite.project.model.entity.DocumentTag;
+import com.cowrite.project.model.entity.EntityTag;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -9,6 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @author Hibiscus-code-generate
  */
 @Mapper
-public interface DocumentTagMapper extends BaseMapper<DocumentTag> {
+public interface DocumentTagMapper extends BaseMapper<EntityTag> {
 
 }

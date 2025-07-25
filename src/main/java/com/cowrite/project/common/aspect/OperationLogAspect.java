@@ -4,7 +4,9 @@ package com.cowrite.project.common.aspect;
 import com.cowrite.project.common.anno.Loggable;
 import com.cowrite.project.common.context.RequestContext;
 import com.cowrite.project.model.entity.OperationLog;
+import com.cowrite.project.model.entity.User;
 import com.cowrite.project.service.OperationLogService;
+import com.cowrite.project.service.UserService;
 import com.cowrite.project.utils.JsonUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -31,16 +33,15 @@ public class OperationLogAspect {
 
     private final OperationLogService logService;
 
-    public OperationLogAspect(OperationLogService logService) {
+    private final UserService userService;
+
+    public OperationLogAspect(OperationLogService logService, UserService userService) {
         this.logService = logService;
+        this.userService = userService;
     }
 
     /**
      * 成功返回后执行日志记录
-     *
-     * @param jp        切点（被拦截的方法信息）
-     * @param loggable  注解中的日志配置
-     * @param result    方法返回结果
      */
     @AfterReturning(pointcut = "@annotation(loggable)", returning = "result")
     public void logSuccess(JoinPoint jp, Loggable loggable, Object result) {
@@ -49,10 +50,6 @@ public class OperationLogAspect {
 
     /**
      * 方法抛出异常后执行日志记录
-     *
-     * @param jp        切点
-     * @param loggable  注解中的日志配置
-     * @param ex        抛出的异常
      */
     @AfterThrowing(pointcut = "@annotation(loggable)", throwing = "ex")
     public void logError(JoinPoint jp, Loggable loggable, Exception ex) {
@@ -61,16 +58,15 @@ public class OperationLogAspect {
 
     /**
      * 核心日志保存方法
-     *
-     * @param jp        切点
-     * @param loggable  注解中的元信息
-     * @param result    方法返回值
-     * @param ex        异常对象（如果有）
      */
     private void saveLog(JoinPoint jp, Loggable loggable, Object result, Exception ex) {
         OperationLog log = new OperationLog();
         log.setType(loggable.type());
         log.setDescription(loggable.value());
+        User currentUser = userService.getCurrentUser();
+        if (currentUser != null){
+            log.setUserId(currentUser.getId());
+        }
         log.setOperator(RequestContext.get(CURRENT_USERNAME, String.class, DEFAULT_USERNAME));
         log.setSuccess(ex == null);
         try{

@@ -226,8 +226,7 @@ CREATE TABLE `hib_notification`
     INDEX `idx_send_time` (`send_time`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci
-    COMMENT = '通知表';
+  COLLATE = utf8mb4_unicode_ci COMMENT = '通知表';
 
 # Tag
 CREATE TABLE `hib_tag`
@@ -240,21 +239,23 @@ CREATE TABLE `hib_tag`
     `deleted`    TINYINT(1)  DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='标签表';
+COLLATE = utf8mb4_unicode_ci COMMENT ='标签表';
 
 # Document Tag
-CREATE TABLE `hib_document_tag`
-(
-    `id`          BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
-    `document_id` BIGINT NOT NULL COMMENT '文档ID',
-    `tag_id`      BIGINT NOT NULL COMMENT '标签ID',
-    `created_at`  DATETIME   DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `updated_at`  DATETIME   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `deleted`     TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0 - 未删除，1 - 删除）',
-    UNIQUE KEY `uk_doc_tag` (`document_id`, `tag_id`)
+CREATE TABLE `hib_entity_tag` (
+    `id`           BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+    `entity_type`  TINYINT NOT NULL COMMENT '实体类型：1-用户，2-文件（可扩展其他类型）',
+    `entity_id`    BIGINT NOT NULL COMMENT '实体ID（用户ID或文件ID）',
+    `tag_id`       BIGINT NOT NULL COMMENT '标签ID（关联hib_tag.id）',
+    `created_at`   DATETIME   DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`   DATETIME   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted`      TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标记（0-未删除，1-删除）',
+    UNIQUE KEY `uk_entity_tag` (`entity_type`, `entity_id`, `tag_id`),
+    KEY `idx_entity` (`entity_type`, `entity_id`),
+    KEY `idx_tag` (`tag_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='文档标签关联表';
+  COLLATE = utf8mb4_unicode_ci COMMENT '实体-标签关联表';
 
 # Document Template
 CREATE TABLE `hib_document_template`

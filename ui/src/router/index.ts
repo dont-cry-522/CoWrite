@@ -10,7 +10,6 @@ import NotificationView from "../views/back/NotificationView.vue"
 import PersonalLogsView from "../views/back/PersonalLogsView.vue"
 import AccountManagementView from "../views/back/AccountManagementView.vue"
 import SettingsView from "../views/back/SettingsView.vue"
-import UserListView from "../views/back/UserListView.vue"
 import HomeView from "../views/back/HomeView.vue"
 import { useAuth } from '../composables/useAuth'
 
@@ -78,10 +77,6 @@ const routes = [
         component: SettingsView,
         transition: 'fade'
       },
-      {
-        path: 'users',
-        component: UserListView
-      }
     ],
     meta: { requiresAuth: true }
   }
@@ -93,7 +88,7 @@ const router = createRouter({
 });
 
 // 全局导航守卫
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _, next) => {
   const { getToken } = useAuth()
 
   // 检查是否需要认证

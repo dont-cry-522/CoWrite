@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cowrite.project.common.ApiResponse;
 import com.cowrite.project.common.PageRequest;
-import com.cowrite.project.model.entity.DocumentTag;
-import com.cowrite.project.service.DocumentTagService;
+import com.cowrite.project.model.entity.EntityTag;
+import com.cowrite.project.service.EntityTagService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/document_tag")
-public class DocumentTagController {
+public class EntityTagController {
 
-    private final DocumentTagService documentTagService;
+    private final EntityTagService documentTagService;
 
-    public DocumentTagController(DocumentTagService documentTagService) {
+    public EntityTagController(EntityTagService documentTagService) {
         this.documentTagService = documentTagService;
     }
 
@@ -30,7 +30,7 @@ public class DocumentTagController {
      * @return 是否新增成功
      */
     @PostMapping
-    public ApiResponse<Boolean> add(@RequestBody DocumentTag entity) {
+    public ApiResponse<Boolean> add(@RequestBody EntityTag entity) {
         return ApiResponse.success(documentTagService.save(entity));
     }
 
@@ -40,7 +40,7 @@ public class DocumentTagController {
      * @return 是否更新成功
      */
     @PutMapping
-    public ApiResponse<Boolean> update(@RequestBody DocumentTag entity) {
+    public ApiResponse<Boolean> update(@RequestBody EntityTag entity) {
         return ApiResponse.success(documentTagService.updateById(entity));
     }
 
@@ -60,7 +60,7 @@ public class DocumentTagController {
      * @return 匹配的实体对象
      */
     @GetMapping("/{id}")
-    public ApiResponse<DocumentTag> getById(@PathVariable("id") Integer id) {
+    public ApiResponse<EntityTag> getById(@PathVariable("id") Integer id) {
         return ApiResponse.success(documentTagService.getById(id));
     }
 
@@ -69,7 +69,7 @@ public class DocumentTagController {
      * @return 实体列表
      */
     @GetMapping
-    public ApiResponse<List<DocumentTag>> list() {
+    public ApiResponse<List<EntityTag>> list() {
         return ApiResponse.success(documentTagService.list());
     }
 
@@ -80,9 +80,9 @@ public class DocumentTagController {
      * @return 分页结果
      */
     @PostMapping("/page")
-    public ApiResponse<Page<DocumentTag>> getPage(@RequestBody PageRequest pageRequest) {
-        Page<DocumentTag> page = new Page<>(pageRequest.getPage(), pageRequest.getSize());
-        QueryWrapper<DocumentTag> wrapper = new QueryWrapper<>();
+    public ApiResponse<Page<EntityTag>> getPage(@RequestBody PageRequest pageRequest) {
+        Page<EntityTag> page = new Page<>(pageRequest.getPage(), pageRequest.getSize());
+        QueryWrapper<EntityTag> wrapper = new QueryWrapper<>();
 
         if (pageRequest.getKeyword() != null && !pageRequest.getKeyword().isEmpty()) {
             wrapper.like("name", pageRequest.getKeyword()); // 可自定义字段
