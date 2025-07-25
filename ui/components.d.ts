@@ -21,6 +21,7 @@ declare module 'vue' {
     IconMdiHome: typeof import('~icons/mdi/home')['default']
     Layout: typeof import('./src/layout/Layout.vue')['default']
     LeftSidebar: typeof import('./src/components/LeftSidebar.vue')['default']
+    MarkdownEditor: typeof import('./src/components/MarkdownEditor.vue')['default']
     MenuItem: typeof import('./src/components/MenuItem.vue')['default']
     NestedOutlineEditor: typeof import('./src/components/NestedOutlineEditor.vue')['default']
     Notify: typeof import('./src/components/Notify.vue')['default']
@@ -33,6 +34,7 @@ declare module 'vue' {
     Sidebar: typeof import('./src/components/Sidebar.vue')['default']
     SiderMenu: typeof import('./src/components/SiderMenu.vue')['default']
     Textarea: typeof import('./src/components/Textarea.vue')['default']
+    VegaLiteTest: typeof import('./src/components/VegaLiteTest.vue')['default']
     WChart: typeof import('./src/components/WChart.vue')['default']
   }
 }
