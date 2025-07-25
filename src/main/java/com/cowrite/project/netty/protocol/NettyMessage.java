@@ -1,5 +1,7 @@
 package com.cowrite.project.netty.protocol;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,37 +14,36 @@ import static com.cowrite.project.utils.JsonUtils.toJson;
  */
 public class NettyMessage {
 
-    /**
-     * 消息类型
-     */
-    private MessageType type;
-
-    /**
-     * 文档ID
-     */
+    //操作类型
+    private String operationType;
+    //文档ID
     private String docId;
-
-    /**
-     * 用户ID
-     */
+    //用户Id
     private String userId;
+    //修改内容
+    private String content;
+    //修改位置
+    private Integer index;
+    //修改时间
+    private Long timestamp;
+    //操作次数
+    private Integer operationNum;
 
-    /**
-     * 消息时间戳
-     */
-    private long timestamp;
 
-    /**
-     * 消息负载
-     */
-    private Map<String, Object> payload = new HashMap<>();
-
-    public MessageType getType() {
-        return type;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setType(MessageType type) {
-        this.type = type;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 
     public String getDocId() {
@@ -53,93 +54,77 @@ public class NettyMessage {
         this.docId = docId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getContent() {
+        return content;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public long getTimestamp() {
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(long timestamp) {
+    public Integer getOperationNum() {
+        return operationNum;
+    }
+
+    public void setOperationNum(Integer operationNum) {
+        this.operationNum = operationNum;
+    }
+
+    public void settimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Map<String, Object> getPayload() {
-        return payload;
+    public NettyMessage(String operationType, String docId, String userId, String content, Integer index, Long timestamp,Integer operationNum) {
+        this.operationType = operationType;
+        this.docId = docId;
+        this.userId = userId;
+        this.content = content;
+        this.index = index;
+        this.timestamp = timestamp;
+        this.operationNum=operationNum;
     }
 
-    public void setPayload(Map<String, Object> payload) {
-        this.payload = payload;
+    public NettyMessage(NettyMessage op) {
+        this.operationType = op.getOperationType();
+        this.docId = op.getDocId();
+        this.userId = op.getUserId();
+        this.content = op.getContent();
+        this.index = op.getIndex();
+        this.timestamp = op.getTimestamp();
+        this.operationNum= op.getOperationNum();
     }
 
-    public static class Builder {
-        private final NettyMessage instance;
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-        public Builder() {
-            instance = new NettyMessage();
-        }
-
-        public Builder type(MessageType type) {
-            instance.type = type;
-            return this;
-        }
-
-        public Builder docId(String docId) {
-            instance.docId = docId;
-            return this;
-        }
-
-        public Builder userId(String userId) {
-            instance.userId = userId;
-            return this;
-        }
-
-        public Builder timestamp(long timestamp) {
-            instance.timestamp = timestamp;
-            return this;
-        }
-
-        public Builder payload(Map<String, Object> payload) {
-            instance.payload = payload;
-            return this;
-        }
-
-        // 方便单条添加
-        public Builder putPayload(String key, Object value) {
-            instance.payload.put(key, value);
-            return this;
-        }
-
-        public NettyMessage build() {
-            // 如果timestamp没设，默认设置当前时间
-            if (instance.timestamp == 0) {
-                instance.timestamp = System.currentTimeMillis();
-            }
-            return instance;
+    public static NettyMessage fromJson(String json) {
+        try {
+            return mapper.readValue(json, NettyMessage.class);
+        } catch (Exception e) {
+            throw new RuntimeException("JSON 解析失败: " + json, e);
         }
     }
 
-    public String toJsonString() {
-        return toJson(this);
+    public String toJson() {
+        try {
+            return mapper.writeValueAsString(this);
+        } catch (Exception e) {
+            throw new RuntimeException("序列化失败", e);
+        }
     }
 
-    public static NettyMessage fromJsonString(String json) {
-        return fromJson(json, NettyMessage.class);
-    }
 
-    @Override
-    public String toString() {
-        return "NettyMessage{" +
-                "type=" + type +
-                ", docId='" + docId + '\'' +
-                ", userId='" + userId + '\'' +
-                ", timestamp=" + timestamp +
-                ", payload=" + payload +
-                '}';
-    }
+
+
 }

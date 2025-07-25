@@ -2,166 +2,190 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Client</title>
+    <title>WebSocket 文档协同编辑测试</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #messages {
-            height: 300px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            overflow-y: scroll;
-            margin-bottom: 10px;
-        }
-        #input {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-        }
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        textarea { width: 100%; height: 200px; margin-top: 10px; }
+        .log { margin-top: 20px; height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; }
+        .status { margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>WebSocket Client</h1>
-    <div id="messages"></div>
-    <input type="text" id="input" placeholder="Enter message...">
-    <button onclick="sendMessage()">Send</button>
 
-    <script>
-        // 获取或生成固定唯一的用户ID
-        function getUserId() {
-            let userId = localStorage.getItem('userId');
-            if (!userId) {
-                // 生成简单唯一ID，比如 'user_' + 时间戳 + 随机数
-                userId = 'user_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
-                localStorage.setItem('userId', userId);
-            }
-            return userId;
+<h2>WebSocket 文档协同编辑测试</h2>
+
+<label for="userId">用户ID：</label>
+<input type="text" id="userId" value="user123" />
+
+<label for="docId">文档ID：</label>
+<input type="text" id="docId" value="doc456" />
+
+<button onclick="connectWebSocket()">连接</button>
+<span class="status" id="status">未连接</span>
+
+<h3>发送操作</h3>
+<label>操作类型：</label>
+<select id="operationType">
+    <option value="insert">插入</option>
+    <option value="delete">删除</option>
+</select>
+
+<label>内容：</label>
+<input type="text" id="content" value="Hello" />
+
+<label>位置：</label>
+<input type="number" id="index" value="0" />
+
+<button onclick="sendOperation()">发送操作</button>
+
+<h3>当前文档内容</h3>
+<textarea id="documentContent" readonly>初始内容</textarea>
+
+<h3>操作日志</h3>
+<div id="log" class="log"></div>
+
+<script>
+    let ws = null;
+    let userId = '';
+    let docId = '';
+    let documentContent = '初始内容';
+    let reconnectAttempts = 0;
+    let maxReconnectAttempts = 5;
+    let heartbeatInterval = 30000; // 每 30 秒发送一次心跳
+    let heartbeatTimer = null;
+
+    function log(message) {
+        const logDiv = document.getElementById("log");
+        logDiv.innerHTML += `<div>> ${message}</div>`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    function setStatus(status) {
+        const statusDiv = document.getElementById("status");
+        statusDiv.textContent = status;
+    }
+
+    function connectWebSocket() {
+        userId = document.getElementById("userId").value.trim();
+        docId = document.getElementById("docId").value.trim();
+
+        if (!userId || !docId) {
+            alert("请输入用户ID和文档ID");
+            return;
         }
 
-        const userId = getUserId();
-        const ws = new WebSocket("ws://localhost:8081/ws");
-        const messagesDiv = document.getElementById("messages");
-        const input = document.getElementById("input");
+        const wsUrl = "ws://localhost:8080/ws";
+        ws = new WebSocket(wsUrl);
 
-        ws.onopen = () => {
-            console.log("WebSocket connection established");
-            appendMessage("Connected to server");
-            // 发送加入文档消息
-            const joinMessage = {
-                type: "DOCUMENT_JOIN",
-                docId: "doc1",
+        ws.onopen = function () {
+            log("✅ WebSocket 连接成功");
+            setStatus("连接成功");
+            reconnectAttempts = 0;
+
+            // 发送初始化信息
+            ws.send(JSON.stringify({
                 userId: userId,
-                timestamp: Date.now(),
-                payload: {}
-            };
-            ws.send(JSON.stringify(joinMessage));
+                docId: docId,
+                operationType: "init",
+                content: "",
+                index: 0
+            }));
+
+            // 启动心跳
+            startHeartbeat();
         };
 
-        ws.onmessage = (event) => {
-            console.log("Received message:", event.data);
+        ws.onmessage = function (event) {
+            log("📩 收到消息: " + event.data);
+
             try {
                 const msg = JSON.parse(event.data);
+                const opType = msg.operationType;
+                const content = msg.content;
+                const index = msg.index;
 
-                // 系统消息标识，比如 userId 是 system
-                if (msg.userId === "system") {
-                    if (msg.type === "USER_ONLINE") {
-                        if (Array.isArray(msg.payload.users)) {
-                            // 批量在线用户列表通知（初始化）
-                            appendMessage(`当前在线用户列表: ${msg.payload.users.join(", ")}`);
-                            // 这里你可以更新前端协作者列表UI，比如显示这些用户头像
-                        } else if (msg.payload.userId) {
-                            // 增量通知，某个用户上线
-                            appendMessage(`用户上线: ${msg.payload.userId}`);
-                            // 这里你可以动态添加该用户到协作者列表UI
-                        }
-                        return; // 处理完后return
-                    }
-                    // 你可以继续处理 system 发送的其他类型消息
+                if (opType === "insert") {
+                    documentContent = insertText(documentContent, content, index);
+                } else if (opType === "delete") {
+                    documentContent = deleteText(documentContent, index, content.length);
                 }
 
-                // 其他类型消息处理
-                switch (msg.type) {
-                    case 'DOCUMENT_UPDATE':
-                        // TODO: 更新文档内容的逻辑
-                        appendMessage(`文档内容更新: ${JSON.stringify(msg.payload)}`);
-                        break;
-
-                    case 'USER_OFFLINE':
-                        appendMessage(`用户下线: ${msg.payload.userId}`);
-                        break;
-
-                    case 'HEARTBEAT':
-                        // 心跳响应，一般不处理或更新状态
-                        console.log('Heartbeat received');
-                        break;
-
-                    default:
-                        appendMessage("收到未知类型消息: " + event.data);
-                }
+                document.getElementById("documentContent").value = documentContent;
             } catch (e) {
-                console.error('解析消息失败', e);
-                appendMessage('收到非法消息: ' + event.data);
+                log("⚠️ 解析消息失败: " + e.message);
             }
         };
 
+        ws.onclose = function () {
+            log("🔌 WebSocket 连接已关闭");
+            setStatus("连接已关闭");
 
-        ws.onclose = () => {
-            console.log("WebSocket connection closed");
-            appendMessage("Disconnected from server");
-        };
+            stopHeartbeat();
 
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-            appendMessage("Error: " + error.message);
-        };
-
-        function sendMessage() {
-            const text = input.value;
-            if (text) {
-                // 构造符合 BaseMessage 结构的 JSON 消息
-                const message = {
-                    type: "CONTENT_INSERT", // 消息类型
-                    docId: "doc1",         // 文档 ID
-                    userId: userId,       // 用户 ID
-                    timestamp: Date.now(), // 时间戳
-                    payload: {             // 消息内容
-                        position: 0,       // 插入位置
-                        content: text      // 插入内容
-                    }
-                };
-                // 发送 JSON 字符串
-                ws.send(JSON.stringify(message));
-                appendMessage("You: " + text);
-                input.value = "";
+            // 尝试自动重连
+            if (reconnectAttempts < maxReconnectAttempts) {
+                reconnectAttempts++;
+                log(`🔁 正在尝试重连（第 ${reconnectAttempts} 次）`);
+                setTimeout(connectWebSocket, 3000); // 3秒后重连
+            } else {
+                log("❌ 已达最大重试次数，停止连接");
             }
-        }
+        };
 
-        function appendMessage(message) {
-            const p = document.createElement("p");
-            p.textContent = message;
-            messagesDiv.appendChild(p);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        window.addEventListener('beforeunload', () => {
-            const leaveMessage = {
-                type: "DOCUMENT_LEAVE",
-                docId: "doc1",
-                userId: userId,
-                timestamp: Date.now(),
-                payload: {}
-            };
-            ws.send(JSON.stringify(leaveMessage));
+        ws.onerror = function (error) {
+            log("❌ WebSocket 错误: " + error);
             ws.close();
-        });
-        setInterval(() => {
-            if(ws.readyState === WebSocket.OPEN){
-                ws.send(JSON.stringify({ type: "HEARTBEAT",  docId: "doc1", userId: userId, timestamp: Date.now() }));
+        };
+    }
+
+    function startHeartbeat() {
+        stopHeartbeat(); // 避免重复启动
+        heartbeatTimer = setInterval(() => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ type: "ping", timestamp: Date.now() }));
+                log("💓 发送心跳 ping");
             }
-        }, 30000); // 每30秒发送一次心跳
-    </script>
+        }, heartbeatInterval);
+    }
+
+    function stopHeartbeat() {
+        if (heartbeatTimer) {
+            clearInterval(heartbeatTimer);
+            heartbeatTimer = null;
+        }
+    }
+
+    function sendOperation() {
+        const opType = document.getElementById("operationType").value;
+        const content = document.getElementById("content").value;
+        const index = parseInt(document.getElementById("index").value);
+
+        if (!ws || ws.readyState !== WebSocket.OPEN) {
+            alert("WebSocket 未连接");
+            return;
+        }
+
+        const message = {
+            userId: userId,
+            docId: docId,
+            operationType: opType,
+            content: content,
+            index: index,
+            timestamp: Date.now()
+        };
+
+        ws.send(JSON.stringify(message));
+        log("📤 已发送操作: " + JSON.stringify(message));
+    }
+
+    function insertText(text, insertContent, position) {
+        return text.slice(0, position) + insertContent + text.slice(position);
+    }
+
+    function deleteText(text, position, length) {
+        return text.slice(0, position) + text.slice(position + length);
+    }
+</script>
+
 </body>
-</html> 
+</html>

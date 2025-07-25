@@ -74,6 +74,12 @@ spring:
     timeout: 5000
     password:
 
+  # MongoDB 配置
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/CoWrite  # 默认本地数据库，数据库名为 cowrite_db
+
+
 # ORM 配置
 mybatis-plus:
   type-handlers-package: com.cowrite.project.common.typehandler
@@ -89,7 +95,6 @@ mybatis-plus:
       id-type: auto                                           # 主键策略
       logic-delete-value: 1                                   # 逻辑删除值
       logic-not-delete-value: 0                               # 正常值
-
 
 management:
   endpoints:
