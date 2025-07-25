@@ -14,15 +14,15 @@ cowrite:
     token-start: Bearer
   #对象存储
   storage:
-    type: minio  # 支持 local、minio、cos
-    minio-endpoint: http://47.108.177.82:9000
-    minio-access-key: W5dV2m1MutQgUS21AlE7
-    minio-secret-key: p1qDvEeJN3DlXWmnlQS0k5TWBLcvWBzOujvr1XwZ
-    minio-bucket: moxie
-    local-base-path: /tmp/uploads
+
+  invite:
+    base-url: http://localhost:8080/api/org_invite/link/
+    font-url: http://localhost:3000/invite
 
 server:
   port: 8080
+  servlet:
+    context-path:
 
 spring:
   profiles:
@@ -33,9 +33,6 @@ spring:
     username: sa
     password: password
     platform: h2
-    initialization-mode: always
-    schema: classpath:schema.sql
-    data: classpath:data.sql
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -69,7 +66,7 @@ spring:
     host: localhost
     port: 6379
     timeout: 5000
-    password:
+    password: 123456
 
 # ORM 配置
 mybatis-plus:

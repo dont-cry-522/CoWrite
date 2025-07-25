@@ -31,6 +31,12 @@ public class TagController {
      */
     @PostMapping
     public ApiResponse<Boolean> add(@RequestBody Tag entity) {
+        if (entity.getName() == null || entity.getName().trim().isEmpty()) {
+            return ApiResponse.error("标签名称不能为空");
+        }
+        if (tagService.count(new QueryWrapper<Tag>().eq("name", entity.getName())) > 0) {
+            return ApiResponse.error("标签名称已存在");
+        }
         return ApiResponse.success(tagService.save(entity));
     }
 
@@ -41,6 +47,12 @@ public class TagController {
      */
     @PutMapping
     public ApiResponse<Boolean> update(@RequestBody Tag entity) {
+        if (entity.getName() == null || entity.getName().trim().isEmpty()) {
+            return ApiResponse.error("标签名称不能为空");
+        }
+        if (tagService.count(new QueryWrapper<Tag>().eq("name", entity.getName())) > 0) {
+            return ApiResponse.error("标签名称已存在");
+        }
         return ApiResponse.success(tagService.updateById(entity));
     }
 
@@ -51,6 +63,10 @@ public class TagController {
      */
     @DeleteMapping("/{id}")
     public ApiResponse<Boolean> delete(@PathVariable("id") Integer id) {
+        Tag tag = tagService.getById(id);
+        if (tag == null){
+            return ApiResponse.error("标签不存在");
+        }
         return ApiResponse.success(tagService.removeById(id));
     }
 
@@ -61,7 +77,11 @@ public class TagController {
      */
     @GetMapping("/{id}")
     public ApiResponse<Tag> getById(@PathVariable("id") Integer id) {
-        return ApiResponse.success(tagService.getById(id));
+        Tag tag = tagService.getById(id);
+        if (tag == null) {
+            return ApiResponse.error("标签不存在");
+        }
+        return ApiResponse.success(tag);
     }
 
     /**
@@ -71,6 +91,19 @@ public class TagController {
     @GetMapping
     public ApiResponse<List<Tag>> list() {
         return ApiResponse.success(tagService.list());
+    }
+
+    /**
+     * 批量删除选中 Tag
+     * @param ids
+     * @return
+     */
+    @DeleteMapping("/batch")
+    public ApiResponse<Boolean> batchDelete(@RequestBody List<Integer> ids) {
+        if (ids == null){
+            return ApiResponse.error("未选择标签");
+        }
+        return ApiResponse.success(tagService.removeByIds(ids));
     }
 
     /**

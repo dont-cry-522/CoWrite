@@ -4,13 +4,23 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cowrite.project.common.ApiResponse;
 import com.cowrite.project.common.PageRequest;
+import com.cowrite.project.common.context.AuthContext;
+import com.cowrite.project.config.ServerConfig;
+import com.cowrite.project.model.dto.Organization.InviteCreateDTO;
 import com.cowrite.project.model.entity.OrganizationInvite;
+import com.cowrite.project.model.vo.InviteResponseVO;
+import com.cowrite.project.model.vo.OrganizationInviteVO;
 import com.cowrite.project.service.OrganizationInviteService;
 import com.j256.simplemagic.logger.Logger;
 import com.j256.simplemagic.logger.LoggerFactory;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -30,6 +40,12 @@ public class OrganizationInviteController {
     private static final Logger log = LoggerFactory.getLogger(OrganizationInvite.class);
 
     /**
+     * 服务地址配置
+     * 用于获取邀请链接相关地址
+     */
+    private final ServerConfig serverConfig;
+
+    /**
      * 组织邀请服务
      * 负责处理组织邀请相关的业务逻辑
      */
@@ -37,6 +53,7 @@ public class OrganizationInviteController {
 
     public OrganizationInviteController(OrganizationInviteService organizationInviteService) {
         this.organizationInviteService = organizationInviteService;
+        this.serverConfig = new ServerConfig();
     }
 
     /**
@@ -107,11 +124,6 @@ public class OrganizationInviteController {
         // 构造查询条件
         QueryWrapper<OrganizationInvite> wrapper = new QueryWrapper<>();
 
-        // 如果有关键字，进行模糊查询
-        if (pageRequest.getKeyword() != null && !pageRequest.getKeyword().isEmpty()) {
-            wrapper.like("name", pageRequest.getKeyword()); // 可自定义字段（如“name”）
-        }
-
         // 如果有排序字段，进行排序
         if (pageRequest.getSortBy() != null && !pageRequest.getSortBy().isEmpty()) {
             wrapper.orderBy(true, "asc".equalsIgnoreCase(pageRequest.getSortOrder()), pageRequest.getSortBy());
@@ -120,4 +132,50 @@ public class OrganizationInviteController {
         // 返回分页结果
         return ApiResponse.success(organizationInviteService.page(page, wrapper));
     }
+
+    /**
+     * 创建邀请码
+     */
+    @ApiOperation("创建邀请码")
+    @PostMapping("/create")
+    public ApiResponse<InviteResponseVO> createInvite(@RequestBody InviteCreateDTO dto) {
+        return ApiResponse.success(organizationInviteService.createInvite(dto));
+    }
+
+    /**
+     * 跳转到邀请页面
+     */
+    @ApiOperation("跳转到邀请页面")
+    @GetMapping("/link/{code}")
+    public ResponseEntity<Object> redirectToInvitePage(@PathVariable String code) {
+        OrganizationInvite invite = organizationInviteService.getByCode(code);
+        if (invite == null || invite.isExpired()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        // 构造前端页面地址
+        URI redirectUri = URI.create(serverConfig.getFontUrl() + "?code=" + code);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(redirectUri);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND); // 302 重定向
+    }
+
+    /**
+     * 验证邀请码
+     */
+    @ApiOperation("验证邀请码")
+    @GetMapping("/validate/{code}")
+    public ApiResponse<OrganizationInviteVO> validateInvite(@PathVariable String code) {
+        return ApiResponse.success(organizationInviteService.validateInviteCode(code));
+    }
+
+    /**
+     * 使用邀请码
+     */
+    @ApiOperation("使用邀请码")
+    @PostMapping("/use/{code}")
+    public ApiResponse<OrganizationInvite> useInvite(@PathVariable String code) {
+        organizationInviteService.useInvite(code, AuthContext.getCurrentUser().getId());
+        return ApiResponse.success();
+    }
+
 }

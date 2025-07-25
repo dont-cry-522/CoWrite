@@ -56,6 +56,8 @@ public class UserController {
      * 邮箱注册账号
      */
     @PostMapping("/register/email")
+
+
     @ApiOperation("邮箱注册账号")
     public ApiResponse<UserVO> registerEmail(@RequestBody UserEmailRequest userEmailRequest, HttpServletRequest request) {
         if (userEmailRequest.getCode().isEmpty() || userEmailRequest.getEmail().isEmpty()){
