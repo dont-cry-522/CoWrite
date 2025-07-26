@@ -41,7 +41,6 @@
     "@iconify-json/mdi": "^1.2.3",
     "@types/express": "^5.0.3",
     "@vitejs/plugin-vue": "^5.0.4",
-    "electron": "^30.0.1",
     "electron-builder": "^24.13.3",
     "typescript": "^5.8.3",
     "unplugin-icons": "^22.1.0",

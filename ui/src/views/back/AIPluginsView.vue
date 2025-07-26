@@ -1,7 +1,5 @@
 <template>
   <div class="plugin-management">
-    <h1 class="title">我的插件</h1>
-
     <!-- 搜索与分类 -->
     <div class="filters">
       <Input
@@ -18,57 +16,30 @@
       <button class="btn open-store-btn" @click="openStore">打开插件商店</button>
     </div>
 
-    <!-- 已安装插件 -->
-    <section>
-      <h2 class="section-title">已安装插件</h2>
-      <div class="plugin-list">
-        <div
-            v-for="plugin in filteredInstalledPlugins"
-            :key="plugin.id"
-            class="plugin-card"
-            @click="openPluginDetails(plugin)"
-        >
-          <div class="plugin-card-header">
-            <h3>{{ plugin.plugin_name }}</h3>
-            <button class="btn uninstall-btn" @click.stop="uninstallPlugin(plugin)">卸载</button>
-          </div>
-          <p>{{ plugin.plugin_type }} - {{ plugin.version }}</p>
-        </div>
-      </div>
-      <Pagination
-          :currentPage="currentInstalledPage"
-          :totalPages="totalInstalledPages"
-          :total="filteredInstalledPlugins.length"
-          :pageSize="installedPageSize"
-          :pageSizes="[10, 20, 50, 100]"
-          :maxVisible="7"
-          @update:page="updateInstalledPage"
-          @update:pageSize="updateInstalledPageSize"
-      />
-    </section>
-
     <!-- 插件商店弹窗 -->
     <div v-if="showStore" class="store-popup">
       <div class="popup-content">
         <h2>插件商店</h2>
         <div class="plugin-list">
           <div
-              v-for="plugin in availablePlugins"
+              v-for="plugin in plugins"
               :key="plugin.id"
               class="plugin-card"
               @click="openPluginDetails(plugin)"
           >
             <div class="plugin-card-header">
-              <h3>{{ plugin.plugin_name }}</h3>
+              <h3>{{ plugin.pluginName }}</h3>
               <button class="btn install-btn" @click.stop="installPlugin(plugin)">安装</button>
             </div>
-            <p>{{ plugin.plugin_type }} - {{ plugin.version }}</p>
+            <p>{{ plugin.pluginType }} - {{ plugin.version }}</p>
           </div>
         </div>
+
+        <!-- 分页 -->
         <Pagination
             :currentPage="currentStorePage"
             :totalPages="totalStorePages"
-            :total="availablePlugins.length"
+            :total="plugins.length"
             :pageSize="storePageSize"
             :pageSizes="[10, 20, 50, 100]"
             :maxVisible="7"
@@ -82,11 +53,11 @@
     <!-- 插件详情弹窗 -->
     <div v-if="showPluginDetails && currentPlugin" class="plugin-details-popup">
       <div class="popup-content">
-        <h2>{{ currentPlugin.plugin_name }} 详情</h2>
-        <p>{{ currentPlugin.plugin_type }}</p>
-        <p>{{ currentPlugin.documentation_url }}</p>
-        <p v-if="currentPlugin.webhook_url">
-          Webhook URL: <a :href="currentPlugin.webhook_url" target="_blank">{{ currentPlugin.webhook_url }}</a>
+        <h2>{{ currentPlugin.pluginName }} 详情</h2>
+        <p>{{ currentPlugin.pluginType }}</p>
+        <p>{{ currentPlugin.documentationUrl }}</p>
+        <p v-if="currentPlugin.webhookUrl">
+          Webhook URL: <a :href="currentPlugin.webhookUrl" target="_blank">{{ currentPlugin.webhookUrl }}</a>
         </p>
         <button class="btn close-btn" @click="closePluginDetails">关闭</button>
       </div>
@@ -95,84 +66,96 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import Pagination from '../../components/Pagination.vue'
-import Input from '../../components/Input.vue'
-import Select from '../../components/Select.vue'
+import { ref, onMounted, computed } from 'vue';
+import api from '../../api'; // 引入接口方法
+import Pagination from '../../components/Pagination.vue';
+import Input from '../../components/Input.vue';
+import Select from '../../components/Select.vue';
 
-interface Plugin {
-  id: number
-  plugin_name: string
-  plugin_type: string
-  version: string
-  webhook_url?: string
-  api_url: string
-  documentation_url: string
-  enabled: boolean
-}
+const categories = ['支付', '分析', 'SEO', '安全', '图像处理'];
 
-const plugins = ref<Plugin[]>([
-  { id: 1, plugin_name: '支付网关', plugin_type: '支付', version: '1.0.0', api_url: 'https://example.com/api/payment', documentation_url: 'https://example.com/docs/payment', enabled: true },
-  { id: 2, plugin_name: '分析追踪器', plugin_type: '分析', version: '2.1.0', api_url: 'https://example.com/api/analytics', documentation_url: 'https://example.com/docs/analytics', enabled: true },
-  { id: 3, plugin_name: 'SEO优化器', plugin_type: 'SEO', version: '3.3.0', api_url: 'https://example.com/api/seo', documentation_url: 'https://example.com/docs/seo', enabled: false },
-  { id: 4, plugin_name: '安全插件', plugin_type: '安全', version: '1.2.0', api_url: 'https://example.com/api/security', documentation_url: 'https://example.com/docs/security', enabled: true },
-  { id: 5, plugin_name: '图像处理插件', plugin_type: '图像处理', version: '1.1.0', api_url: 'https://example.com/api/image', documentation_url: 'https://example.com/docs/image', enabled: false },
-])
-
-const searchQuery = ref('')
-const selectedCategory = ref<string | null>(null)
-const showStore = ref(false)
-const showPluginDetails = ref(false)
-const currentPlugin = ref<Plugin | null>(null)
-
-// 分类数据
-const categories = ['支付', '分析', 'SEO', '安全', '图像处理']
-
-// 格式化分类选项
 const formattedCategoriesOptions = computed(() => [
   { value: null, label: '所有分类' },
   ...categories.map(category => ({ value: category, label: category }))
-])
+]);
+
+interface Plugin {
+  id: number;
+  pluginName: string;
+  pluginType: string;
+  version: string;
+  webhookUrl?: string;
+  apiUrl: string;
+  documentationUrl: string;
+  enabled: boolean;
+}
+
+const plugins = ref<Plugin[]>([]); // 插件列表
+const searchQuery = ref(''); // 搜索查询
+const selectedCategory = ref<string | null>(null); // 选择分类
+const showStore = ref(false); // 控制商店弹窗
+const showPluginDetails = ref(false); // 控制插件详情弹窗
+const currentPlugin = ref<Plugin | null>(null); // 当前选中的插件
 
 // 分页控制
-const currentInstalledPage = ref(1)
-const installedPageSize = ref(10)
-const currentStorePage = ref(1)
-const storePageSize = ref(10)
+const currentStorePage = ref(1); // 当前商店页码
+const storePageSize = ref(10); // 商店每页显示插件数量
 
-// 安装插件相关
-const installedPluginIds = [1, 2, 4]
-const installedPlugins = computed(() => plugins.value.filter(plugin => installedPluginIds.includes(plugin.id)))
-const availablePlugins = computed(() => plugins.value.filter(plugin => !installedPluginIds.includes(plugin.id)))
+// 请求插件数据
+const loadPlugins = async () => {
+  try {
+    const result = await api.pluginApi.fetchPlugins({
+      page: currentStorePage.value,
+      size: storePageSize.value,
+      keyword: searchQuery.value, // 传递搜索关键词
+      category: selectedCategory.value, // 传递选择的分类
+    });
 
-// 搜索和分页过滤已安装插件
-const filteredInstalledPlugins = computed(() => {
-  return installedPlugins.value
-      .filter(plugin => plugin.plugin_name.toLowerCase().includes(searchQuery.value.toLowerCase()))
-      .slice((currentInstalledPage.value - 1) * installedPageSize.value, currentInstalledPage.value * installedPageSize.value)
-})
+    // 确保 result.data 和 result.data.records 存在
+    if (result.data && result.data.records) {
+      plugins.value = result.data.records; // 设置插件数据
+    } else {
+      console.error("返回的数据格式不正确，缺少 'records' 属性");
+      plugins.value = []; // 如果没有 records，设置为空数组
+    }
+  } catch (error) {
+    console.error('Error loading plugins:', error);
+  }
+};
 
-const totalInstalledPages = computed(() => Math.ceil(filteredInstalledPlugins.value.length / installedPageSize.value))
+onMounted(() => {
+  loadPlugins(); // 页面加载时加载插件列表
+});
 
-const filteredStorePlugins = computed(() => {
-  return availablePlugins.value
-      .filter(plugin => plugin.plugin_name.toLowerCase().includes(searchQuery.value.toLowerCase()))
-      .slice((currentStorePage.value - 1) * storePageSize.value, currentStorePage.value * storePageSize.value)
-})
+// 搜索和分页控制
+const updateStorePage = (page: number) => {
+  currentStorePage.value = page;
+  loadPlugins(); // 更新页面时重新加载插件
+};
 
-const totalStorePages = computed(() => Math.ceil(filteredStorePlugins.value.length / storePageSize.value))
+const updateStorePageSize = (size: number) => {
+  storePageSize.value = size;
+  currentStorePage.value = 1; // 重置到第一页
+  loadPlugins(); // 更新每页数量时重新加载插件
+};
 
-const openStore = () => { showStore.value = true }
-const closeStore = () => { showStore.value = false }
-const installPlugin = (plugin: Plugin) => { alert(`插件 "${plugin.plugin_name}" 已安装！`) }
-const uninstallPlugin = (plugin: Plugin) => { alert(`插件 "${plugin.plugin_name}" 已卸载！`) }
-const openPluginDetails = (plugin: Plugin) => { currentPlugin.value = plugin; showPluginDetails.value = true }
-const closePluginDetails = () => { showPluginDetails.value = false }
+// 总页数计算
+const totalStorePages = computed(() => {
+  return Math.ceil(plugins.value.length / storePageSize.value);
+});
 
-const updateInstalledPage = (page: number) => { currentInstalledPage.value = page }
-const updateInstalledPageSize = (size: number) => { installedPageSize.value = size; currentInstalledPage.value = 1 }
-const updateStorePage = (page: number) => { currentStorePage.value = page }
-const updateStorePageSize = (size: number) => { storePageSize.value = size; currentStorePage.value = 1 }
+// 打开/关闭插件商店
+const openStore = () => { showStore.value = true; };
+const closeStore = () => { showStore.value = false; };
+
+// 打开插件详情
+const openPluginDetails = (plugin: Plugin) => { currentPlugin.value = plugin; showPluginDetails.value = true; };
+const closePluginDetails = () => { showPluginDetails.value = false; };
+
+// 安装插件
+const installPlugin = (plugin: Plugin) => {
+  alert(`插件 "${plugin.pluginName}" 已安装！`);
+};
 </script>
 
 <style scoped>
@@ -180,6 +163,7 @@ const updateStorePageSize = (size: number) => { storePageSize.value = size; curr
   padding: 20px 30px;
   border-radius: 10px;
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  height: 95%;
 }
 
 .title {
@@ -268,7 +252,7 @@ const updateStorePageSize = (size: number) => { storePageSize.value = size; curr
 .plugin-card button:hover {
   background-color: #00a0b2;
 }
-
+/* 限制插件商店和插件详情弹窗的最大高度 */
 .store-popup, .plugin-details-popup {
   position: fixed;
   top: 50%;
@@ -279,10 +263,19 @@ const updateStorePageSize = (size: number) => { storePageSize.value = size; curr
   padding: 40px;
   border-radius: 10px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-  max-width: 600px;
+  max-width: 800px;
   width: 100%;
+  max-height: 80vh; /* 最大高度为 80% 的视口高度 */
+  overflow-y: auto; /* 超出内容时启用垂直滚动条 */
 }
 
+/* 如果需要进一步限制内容区域的最大高度，也可以设置 */
+.plugin-list {
+  max-height: 60vh; /* 设置插件列表最大高度为 60% 的视口高度 */
+  overflow-y: auto; /* 启用滚动条 */
+}
+
+/* 样式保持不变，其它部分 */
 .store-popup h2, .plugin-details-popup h2 {
   font-size: 24px;
   font-weight: bold;
@@ -299,4 +292,5 @@ const updateStorePageSize = (size: number) => { storePageSize.value = size; curr
 .close-btn:hover {
   background-color: #ff2b2b;
 }
+
 </style>

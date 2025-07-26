@@ -28,9 +28,7 @@ public class PluginController {
 
 
     /**
-     * 上传插件文件
-     * @param file 插件文件
-     * @return 上传结果
+     * 上传插件文件3
      */
     @PostMapping("/upload")
     public ApiResponse<String> uploadPlugin(@RequestParam("file") MultipartFile file) {
@@ -39,20 +37,7 @@ public class PluginController {
     }
 
     /**
-     * 根据 ID 获取 Plugin 详情
-     * @param id 主键 ID
-     * @return 匹配的实体对象
-     */
-    @GetMapping("/{id}")
-    public ApiResponse<Plugin> getById(@PathVariable("id") Integer id) {
-        return ApiResponse.success(pluginService.getById(id));
-    }
-
-    /**
      * 分页查询 Plugin 列表
-     * 支持关键字模糊搜索与排序
-     * @param pageRequest 分页与筛选请求参数
-     * @return 分页结果
      */
     @PostMapping("/page")
     public ApiResponse<Page<Plugin>> getPage(@RequestBody PageRequest pageRequest) {
@@ -60,7 +45,7 @@ public class PluginController {
         QueryWrapper<Plugin> wrapper = new QueryWrapper<>();
 
         if (pageRequest.getKeyword() != null && !pageRequest.getKeyword().isEmpty()) {
-            wrapper.like("pluginName", pageRequest.getKeyword()); // 可自定义字段
+            wrapper.like("pluginName", pageRequest.getKeyword());
         }
 
         if (pageRequest.getSortBy() != null && !pageRequest.getSortBy().isEmpty()) {

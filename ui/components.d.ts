@@ -23,6 +23,7 @@ declare module 'vue' {
     Layout: typeof import('./src/layout/Layout.vue')['default']
     LeftSidebar: typeof import('./src/components/LeftSidebar.vue')['default']
     MarkdownEditor: typeof import('./src/components/MarkdownEditor.vue')['default']
+    MarkdownRenderer: typeof import('./src/components/MarkdownRenderer.vue')['default']
     MenuItem: typeof import('./src/components/MenuItem.vue')['default']
     NestedOutlineEditor: typeof import('./src/components/NestedOutlineEditor.vue')['default']
     Notify: typeof import('./src/components/Notify.vue')['default']
